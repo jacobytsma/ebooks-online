@@ -9,3 +9,9 @@ body {
     margin-right: 1px;
     margin-top: 0.5px;
 }
+
+.table{
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 15px;
+}

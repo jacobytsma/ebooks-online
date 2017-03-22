@@ -1,22 +1,5 @@
-@{
-    var db = Database.Open("e-Books");
-    var selectCommand = "SELECT * FROM boeken";
-    var searchTerm = "";
-
-    //if (!Request.QueryString["searchGenre"].IsEmpty())
-    //{
-    //    selectCommand = "SELECT * FROM boeken WHERE Genre = @0";
-    //    searchTerm = Request.QueryString["searchGenre"];
-    //}
-
-    //if (!Request.QueryString["searchTitle"].IsEmpty())
-    //{
-    //    selectCommand = "SELECT * FROM Movies WHERE Title LIKE @0";
-    //    searchTerm = "%" + Request.QueryString["searchTitle"] + "%";
-    //}
-
-    var selectedData = db.Query(selectCommand, searchTerm);
-    var grid = new WebGrid(source: selectedData, defaultSort: "Titel", rowsPerPage: 7);
+﻿@{
+    
 }
 
 <!DOCTYPE html>
@@ -79,44 +62,11 @@
     </nav>
 
 
-<!-- Left panel-->
-    
-<!--Middle panel-->
-    <div class="panel panel-default" >
-        <!-- Default panel contents -->
-        <div class="panel-heading">E-Book Collection</div>
-        <div class="panel-body">
-            <p>All Downloadeble E-Books</p>
-        </div>
-
-        <!-- Table -->
-        <table class="table" >
-            @grid.GetHtml(
-        tableStyle: "grid",
-        headerStyle: "head",
-        alternatingRowStyle: "alt",
-        columns: grid.Columns(
-    grid.Column("Titel"),
-    grid.Column("Auteur"),
-    grid.Column("Datum"),
-    grid.Column("Waardering"),
-    grid.Column("Taal"),
-    grid.Column("Uitgever"),
-    grid.Column("Genre")
-        )
-    )
-        </table>
-    </div>
-
-    <div >
-       
-    </div>
-<!--Right panel-->
 
 
-    <!-- JQuery Scripts-->
+         <!-- JQuery Scripts-->
     <script src="https://code.jquery.com/jquery-3.2.1.js"
             integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
             crossorigin="anonymous"></script>
-</body>
+    </body>
 </html>
