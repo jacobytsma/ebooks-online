@@ -82,16 +82,16 @@
 <!-- Left panel-->
     
 <!--Middle panel-->
-    <div class="panel panel-default" >
-        <!-- Default panel contents -->
-        <div class="panel-heading">E-Book Collection</div>
-        <div class="panel-body">
-            <p>All Downloadeble E-Books</p>
-        </div>
-
-        <!-- Table -->
-        <table class="table" >
-            @grid.GetHtml(
+    <div class="row col-lg-6>
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">E-Book Collection</div>
+            <div class="panel-body">
+                <p>All Downloadeble E-Books</p>
+            </div>
+            <!-- Table -->
+            <table class="table">
+                @grid.GetHtml(
         tableStyle: "grid",
         headerStyle: "head",
         alternatingRowStyle: "alt",
@@ -105,11 +105,11 @@
     grid.Column("Genre")
         )
     )
-        </table>
-    </div>
+            </table>
+        </div>
+        <div>
 
-    <div >
-       
+        </div>
     </div>
 <!--Right panel-->
 
