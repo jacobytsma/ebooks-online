@@ -1,5 +1,7 @@
 @{
 
+    Layout = "~/_SiteLayout.cshtml";
+
     Validation.RequireField("Titel", "Je moet een titel van het boek toevoegen");
     Validation.RequireField("Auteur", "Voeg een auteur toe");
     Validation.RequireField("Datum", "Voeg een jaar van uitgeven aan");
@@ -38,7 +40,7 @@
 
             var db = Database.Open("e-Books");
             var insertCommand =
-                "INSERT INTO boeken (Titel, Auteur, Datum, Waardering, Taal, Uitgever, Genre) Values(@0, @1, @2, @3, @4, @5, @6 ,@7,@8)";
+                "INSERT INTO boeken (Titel, Auteur, Datum, Waardering, Taal, Uitgever, Genre) Values(@0, @1, @2, @3, @4, @5, @6)";
             db.Execute(insertCommand, titel, auteur, datum, waard, taal, uitgever, genre);
             Response.Redirect("~/Default-Page.cshtml");
         }
@@ -51,127 +53,77 @@
 <head>
     <title>E-Books</title>
 
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="~/css/Logo.css" />
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
-    <!--Responsive Mobiel-->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
-
 </head>
-<body style="background-color:#BDE0FB">
- <!--The Navbar Element-->   
-    <nav class="navbar navbar-default"  >
-        <div class="container-fluid" style="background-color:dodgerblue">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header" >
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
+<body >
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="center-block">
+                    
+                        <!--Toevoegen boek-->
+                        <h2>Toevoegen van boeken</h2>
+                        @Html.ValidationSummary()
+                        <form method="post">
+                            <fieldset>
+                                <legend>Voeg een boek toe</legend>
+                                <!-- Lijst met Toevoegende-->
+                                <p>
+                                    <label for="titel">Titel:</label>
+                                    <input type="text" name="titel" value="@Request.Form["titel"]" />
+                                    @Html.ValidationMessage("titel")
+                                </p>
+                                <p>
+                                    <label for="auteur">Auteur:</label>
+                                    <input type="text" name="Auteur" value="@Request.Form["Auteur"]" />
+                                    @Html.ValidationMessage("Auteur")
+                                </p>
+                                <p>
+                                    <label for="datum">Datum:</label>
+                                    <input type="date" name="Datum" value="@Request.Form["Datum"]" />
+                                    @Html.ValidationMessage("Datum")
+                                </p>
+                                <p>
+                                    <label for="waardering">waardering:</label>
+                                    <input type="number" name="Waardering" maxlength="5" value="@Request.Form["Waardering"]" />
+                                    @Html.ValidationMessage("Waardering")
+                                </p>
+                                <p>
+                                    <label for="Taal">Taal:</label>
+                                    <input type="text" name="Taal" value="@Request.Form["Taal"]" />
+                                    @Html.ValidationMessage("Taal")
+                                </p>
+                                <p>
+                                    <label for="Uitgever">Uitgever:</label>
+                                    <input type="text" name="Uitgever" value="@Request.Form["Uitgever"]" />
+                                    @Html.ValidationMessage("Uitgever")
+                                </p>
+                                <p>
+                                    <label for="Genre">Genre:</label>
+                                    <input type="text" name="Genre" value="@Request.Form["Genre"]" />
+                                    @Html.ValidationMessage("Genre")
+                                </p>
+                                @*<p>
+                    <label for="Foto">Foto:</label>
+                    <input type="file" name="Foto" value="@Request.Form["Foto"]" />
+                    @Html.ValidationMessage("Foto")
+                </p>
 
+                <p>
+                    <label for="Bestand">Bestand:</label>
+                    <input type="file" name="Bestand" value="@Request.Form["Bestand"]" />
+                    @Html.ValidationMessage("Bestand")
+                </p>*@
 
-                </button>
-                <img src="~/Images/child-reading-book_icon-icons.com_49293.png" height="50" width="50"/>
-
-                <a class="navbar-brand" href="#" style="color:black">E-Books Online van Aswin</a>
-                
+                                <p><input type="submit" name="buttonSubmit" value="Voeg Boek toe" /></p>
+                            </fieldset>
+                        </form>
+                    
+                </div>
             </div>
+        </div>
+    </div>
 
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Toevoegen <span class="sr-only">(current)</span></a></li>
-                    <li class="active"><a href="#">Bewerken <span class="sr-only">(current)</span></a></li>
-                    <li class="active"><a href="#">Verwijderen <span class="sr-only">(current)</span></a></li>
-                    <li class="active"><a href="#">Mijn Collectie <span class="sr-only">(current)</span></a></li>
-                    
-                </ul>
-
-                <ul class="nav navbar-nav">
-                    <button type="button" class="btn btn-default navbar-btn">Sign in</button>
-                    <li class="active" ><a href="#">Instellingen <span class="sr-only">(current)</span></a></li>
-                    
-                </ul>
-            </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
-    </nav>
-
-    <!--Toevoegen boek-->
-
-    <h2>Toevoegen van boeken</h2>
-    @Html.ValidationSummary()
-    <form method="post">
-        <fieldset>
-            <legend>Voeg een boek toe</legend>
-            <!-- Lijst met Toevoegende-->
-            <p>
-                <label for="titel">Titel:</label>
-                <input type="text" name="titel" value="@Request.Form["titel"]" />
-                @Html.ValidationMessage("titel")
-            </p>
-
-            <p>
-                <label for="auteur">Auteur:</label>
-                <input type="text" name="Auteur" value="@Request.Form["Auteur"]" />
-                @Html.ValidationMessage("Auteur")
-            </p>
-
-            <p>
-                <label for="datum">Datum:</label>
-                <input type="date" name="Datum" value="@Request.Form["Datum"]" />
-                @Html.ValidationMessage("Datum")
-            </p>
-
-            <p>
-                <label for="waardering">waardering:</label>
-                <input type="number" name="Waardering" value="@Request.Form["Waardering"]" />
-                @Html.ValidationMessage("Waardering")
-            </p>
-
-            <p>
-                <label for="Taal">Taal:</label>
-                <input type="text" name="Taal" value="@Request.Form["Taal"]" />
-                @Html.ValidationMessage("Taal")
-            </p>
-
-            <p>
-                <label for="Uitgever">Uitgever:</label>
-                <input type="text" name="Uitgever" value="@Request.Form["Uitgever"]" />
-                @Html.ValidationMessage("Uitgever")
-            </p>
-
-            <p>
-                <label for="Genre">Genre:</label>
-                <input type="text" name="Genre" value="@Request.Form["Genre"]" />
-                @Html.ValidationMessage("Genre")
-            </p>
-
-            @*<p>
-                <label for="Foto">Foto:</label>
-                <input type="file" name="Foto" value="@Request.Form["Foto"]" />
-                @Html.ValidationMessage("Foto")
-            </p>
-
-            <p>
-                <label for="Bestand">Bestand:</label>
-                <input type="file" name="Bestand" value="@Request.Form["Bestand"]" />
-                @Html.ValidationMessage("Bestand")
-            </p>*@
-
-
-
-            <p><input type="submit" name="buttonSubmit" value="Voeg Boek toe" /></p>
-        </fieldset>
-    </form>
+    
 
 
 

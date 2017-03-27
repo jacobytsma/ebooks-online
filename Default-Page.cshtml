@@ -1,117 +1,94 @@
 @{
+
+    Layout = "~/_SiteLayout.cshtml";
+
     var db = Database.Open("e-Books");
     var selectCommand = "SELECT * FROM boeken";
     var searchTerm = "";
 
-    //if (!Request.QueryString["searchGenre"].IsEmpty())
-    //{
-    //    selectCommand = "SELECT * FROM boeken WHERE Genre = @0";
-    //    searchTerm = Request.QueryString["searchGenre"];
-    //}
+    var query = "SELECT * FROM boeken";
+    var data = db.Query(query);
+    var columns = new[] { "Titel", "Auteur", "Datum", "Waardering", "Taal", "Uitgever", "Genre" };
+    var grid = new WebGrid(data, ajaxUpdateContainerId: "grid", columnNames: columns);
 
-    //if (!Request.QueryString["searchTitle"].IsEmpty())
-    //{
-    //    selectCommand = "SELECT * FROM Movies WHERE Title LIKE @0";
-    //    searchTerm = "%" + Request.QueryString["searchTitle"] + "%";
-    //}
 
     var selectedData = db.Query(selectCommand, searchTerm);
-    var grid = new WebGrid(source: selectedData, defaultSort: "Titel", rowsPerPage: 7);
+
 }
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>E-Books</title>
-
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="~/css/Logo.css" />
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
-    <!--Responsive Mobiel-->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
 
 
 </head>
-<body style="background-color:#BDE0FB">
- <!--The Navbar Element-->   
-    <nav class="navbar navbar-default"  >
-        <div class="container-fluid" style="background-color:dodgerblue">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header" >
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
+<body>
 
-
-                </button>
-                <img src="~/Images/child-reading-book_icon-icons.com_49293.png" height="50" width="50"/>
-
-                <a class="navbar-brand" href="#" style="color:black">E-Books Online van Aswin</a>
-                
-            </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Toevoegen <span class="sr-only">(current)</span></a></li>
-                    <li class="active"><a href="#">Bewerken <span class="sr-only">(current)</span></a></li>
-                    <li class="active"><a href="#">Verwijderen <span class="sr-only">(current)</span></a></li>
-                    <li class="active"><a href="#">Mijn Collectie <span class="sr-only">(current)</span></a></li>
-                    
+<div class="container-fluid"> 
+    <div class="row">
+        <div class="col-xs-2">
+            <form class="panel">
+                <h4 align="center">Zoek Filter</h4>
+                <br /><br />
+                <ul>
+                    <li><label><input type="checkbox" name="Titel" />Titel</label></li>
+                    <li><label><input type="checkbox" name="Auteur" />Auteur</label></li>
+                    <li><label><input type="checkbox" name="Genre" />Genre</label></li>
+                    <li><label><input type="checkbox" name="Waardering" />Waardering</label></li>
+                    <li><label><input type="checkbox" name="Taal" />Taal</label></li>
                 </ul>
 
-                <ul class="nav navbar-nav">
-                    <button type="button" class="btn btn-default navbar-btn">Sign in</button>
-                    <li class="active" ><a href="#">Instellingen <span class="sr-only">(current)</span></a></li>
-                    
-                </ul>
-            </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
-    </nav>
-
-
-<!-- Left panel-->
-    
-<!--Middle panel-->
-    <div class="row col-lg-6>
-        <div class="panel panel-default">
-            <!-- Default panel contents -->
-            <div class="panel-heading">E-Book Collection</div>
-            <div class="panel-body">
-                <p>All Downloadeble E-Books</p>
-            </div>
-            <!-- Table -->
-            <table class="table">
-                @grid.GetHtml(
-        tableStyle: "grid",
-        headerStyle: "head",
-        alternatingRowStyle: "alt",
-        columns: grid.Columns(
-    grid.Column("Titel"),
-    grid.Column("Auteur"),
-    grid.Column("Datum"),
-    grid.Column("Waardering"),
-    grid.Column("Taal"),
-    grid.Column("Uitgever"),
-    grid.Column("Genre")
-        )
-    )
-            </table>
+            </form>
         </div>
-        <div>
+        <div class="col-xs-8">
+            <h1>De E-Book Collectie</h1>
+                <div id="grid">
+                @grid.GetHtml(
+                    tableStyle: "table",
+                    headerStyle: "head",
+                    alternatingRowStyle: "alt"
 
+                )
+        </div>
+            @section script{
+                <script type="text/javascript">
+                    $(function(){
+                    $('tbody tr').hover( function(){
+                    $(this).toggleClass('clickable');
+                    }).on('click', function(){
+                    location.href = '/Details/' + $(this).find('td:first').text();
+                    });
+                    });
+                </script>
+            }
+        </div>
+        <div class="col-xs-2">
+            <form class="panel">
+                <div class="text-center">
+                    <img src="~/Images/child-reading-book_icon-icons.com_49293.png" height="60" width="60" alt="" class="img-rounded">
+                    <br /><br />
+                    <p5><b>Titel:</b>.......</p5>
+                    <br />
+                    <p5><b>Auteur:</b>.......</p5>
+                    <br />
+                    <p5><b>Taal:</b>.......</p5>
+                    <br />
+                    <p5><b>Waardering:</b>.......</p5>
+                    <br />
+                    <p5><b>Genre:</b>.......</p5>
+                </div>
+            </form>
         </div>
     </div>
-<!--Right panel-->
+</div>
+
+
+
+
+
+
+    
 
 
     <!-- JQuery Scripts-->
