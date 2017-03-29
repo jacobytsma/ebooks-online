@@ -56,25 +56,28 @@
     @Html.ValidationSummary()
 </head>
 <body>  
-        <h2>Boek aanpassen</h2>  
-         <h4>Boek Informatie</h4>  
-  <form method="get">
-      <div>
-        <label for="searchGenre">Genre:</label>
-        <input type="text" name="searchGenre" value="@Request.QueryString["searchGenre"]" />
-        <input type="Submit" value="Search Genre" /><br/>
-        (Laat leeg om alle boeken te zien.)<br/>
-      </div>
- 
-      <div>
-        <label for="SearchTitle">Titel:</label>
-        <input type="text" name="searchTitle" value="@Request.QueryString["searchTitle"]" />
-        <input type="Submit" value="Search Title" /><br/>
-      </div>
-    </form>
- 
-<div>
-     @grid.GetHtml(
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-lg-offset-4">
+                <h2>Boek aanpassen</h2>
+                <h4>Boek Informatie</h4>
+                <form method="get">
+                    <div>
+                        <label for="searchGenre">Genre:</label>
+                        <input type="text" name="searchGenre" value="@Request.QueryString["searchGenre"]" />
+                        <input type="Submit" value="Search Genre" /><br />
+                        (Laat leeg om alle boeken te zien.)<br />
+                    </div>
+
+                    <div>
+                        <label for="SearchTitle">Titel:</label>
+                        <input type="text" name="searchTitle" value="@Request.QueryString["searchTitle"]" />
+                        <input type="Submit" value="Search Title" /><br />
+                    </div>
+                </form>
+
+                <div>
+                    @grid.GetHtml(
         tableStyle: "grid",
         headerStyle: "head",
         alternatingRowStyle: "alt",
@@ -84,24 +87,27 @@
     grid.Column("Genre")
         )
     )
-</div>
- 
-@section script{
-<script type="text/javascript">
+                </div>
+
+                @section script{
+                    <script type="text/javascript">
     $(function(){
         $('tbody tr').hover( function(){
             $(this).toggleClass('clickable');
         }).on('click', function(){
-            location.href = '/AanpassenBoek2/' + $(this).find('td:first').text();  
- 
-        }); 
+            location.href = '/AanpassenBoek2/' + $(this).find('td:first').text();
+
+        });
     });
-</script>       
-    }       
-     
-    <p><a href="~/Default-Page">Return</a></p>
- 
-    </body>
+                    </script>
+                }
+
+                <p><a href="~/Default-Page">Return</a></p>
+
+            </div>
+        </div>
+    </div>
+</body>
 </html>
 
 
