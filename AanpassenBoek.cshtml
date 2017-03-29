@@ -1,22 +1,108 @@
-@{
-    
+@{Layout = "~/_SiteLayout.cshtml";
+     Page.Title = "Aanpassen Boek";
+     var titel = "";
+     var auteur = "";
+     var datum = "";
+     var waardering = "";
+     var taal = "";
+     var uitgever = "";
+     var genre = "";
+     var boekid = "";
+ 
+      var db = Database.Open("e-Books") ;
+    var selectCommand = "SELECT * FROM boeken";
+     var searchTerm = "";
+ 
+  
+      if(!Request.QueryString["searchGenre"].IsEmpty() ) {
+        selectCommand = "SELECT * FROM boeken WHERE Genre = @0";
+        searchTerm = Request.QueryString["searchGenre"];
+    }
+   if(!Request.QueryString["searchTitle"].IsEmpty() ) {
+        selectCommand = "SELECT * FROM boeken WHERE Titel LIKE @0";
+        searchTerm = "%" + Request.QueryString["searchTitle"] + "%";
+    }
+ 
+    var selectedData = db.Query(selectCommand, searchTerm);
+    var grid = new WebGrid(source: selectedData, defaultSort: "Genre", rowsPerPage:3);
+  
+      
+ 
+       if(IsPost){
+        Validation.RequireField("titel", "U heeft geen titel toegevoegd");
+        Validation.RequireField("auteur", "U heeft geen titel toegevoegd");
+        Validation.RequireField("datum", "U heeft geen datum toegevoed");
+         Validation.RequireField("waardering", "U heeft geen waardering toegevoegd");
+        Validation.RequireField("taal", "U heeft geen taal toegevoegd");
+        Validation.RequireField("uitgever", "U heeft geen uitgever toegevoegd");
+         Validation.RequireField("genre", "U heeft geen genre toegevoegd");
+ 
+        titel = Request.Form["titel"];
+        auteur = Request.Form["auteur"];
+        datum = Request.Form["datum"];
+        waardering = Request.Form["waardering"];
+        taal = Request.Form["taal"];
+        uitgever = Request.Form["uitgever"];
+        genre = Request.Form["genre"];
+    }
 }
-
+ 
+ 
 <!DOCTYPE html>
-
+ 
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title></title>
-    </head>
-    <body>
-       
-        
-         
-        
-        <!-- JQuery Scripts-->
-            <script src="https://code.jquery.com/jquery-3.2.1.js"
-            integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
-            crossorigin="anonymous"></script> 
+<head>
+        <meta charset= "utf-8" />    
+    @Html.ValidationSummary()
+</head>
+<body>  
+        <h2>Boek aanpassen</h2>  
+         <h4>Boek Informatie</h4>  
+  <form method="get">
+      <div>
+        <label for="searchGenre">Genre:</label>
+        <input type="text" name="searchGenre" value="@Request.QueryString["searchGenre"]" />
+        <input type="Submit" value="Search Genre" /><br/>
+        (Laat leeg om alle boeken te zien.)<br/>
+      </div>
+ 
+      <div>
+        <label for="SearchTitle">Titel:</label>
+        <input type="text" name="searchTitle" value="@Request.QueryString["searchTitle"]" />
+        <input type="Submit" value="Search Title" /><br/>
+      </div>
+    </form>
+ 
+<div>
+     @grid.GetHtml(
+        tableStyle: "grid",
+        headerStyle: "head",
+        alternatingRowStyle: "alt",
+   columns: grid.Columns(
+   grid.Column(format: @<a href="~/AanpassenBoek2?id=@item.ID">Edit</a>),
+    grid.Column("Titel"),
+    grid.Column("Genre")
+        )
+    )
+</div>
+ 
+@section script{
+<script type="text/javascript">
+    $(function(){
+        $('tbody tr').hover( function(){
+            $(this).toggleClass('clickable');
+        }).on('click', function(){
+            location.href = '/AanpassenBoek2/' + $(this).find('td:first').text();  
+ 
+        }); 
+    });
+</script>       
+    }       
+     
+    <p><a href="~/Default-Page">Return</a></p>
+ 
     </body>
 </html>
+
+
+
