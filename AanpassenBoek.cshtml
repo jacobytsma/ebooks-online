@@ -82,11 +82,12 @@
         headerStyle: "head",
         alternatingRowStyle: "alt",
    columns: grid.Columns(
-   grid.Column(format: @<a href="~/AanpassenBoek2?id=@item.ID">Edit</a>),
+   grid.Column(format: @<a style="display:none;" type="hidden" href="~/AanpassenBoek2?id=@item.ID">@item.ID</a>),
     grid.Column("Titel"),
     grid.Column("Genre")
         )
     )
+                    
                 </div>
 
                 @section script{
@@ -95,7 +96,7 @@
         $('tbody tr').hover( function(){
             $(this).toggleClass('clickable');
         }).on('click', function(){
-            location.href = '/AanpassenBoek2/' + $(this).find('td:first').text();
+            location.href = '/AanpassenBoek2?id=' + $(this).find('td:first').text();
 
         });
     });
