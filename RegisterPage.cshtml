@@ -71,14 +71,14 @@
                     if (requireEmailConfirmation)
                     {
                         // Thank the user for registering and let them know an email is on its way
-                        Response.Redirect("~/Default-Page");
+                        Response.Redirect("~/");
                     }
                     else
                     {
                         // Navigate back to the homepage and exit
                         WebSecurity.Login(email, password);
 
-                        Response.Redirect("~/Default-Page");
+                        Response.Redirect("~/");
                     }
                 }
                 catch (System.Web.Security.MembershipCreateUserException e)
@@ -98,63 +98,63 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>E-Books</title>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="~/css/Logo.css" />
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <!--Responsive Mobiel-->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta charset="utf-8" />
-</head>
-<body style="background-color:#BDE0FB">
-    <br />
-    <br />
-    <br />
-    <div class="row center-block">
-        <div class="col s12 col-md-offset-4">
-            <div class="card-panel">
-                <div class="row">
-                    <form method="post">
-                        @AntiForgery.GetHtml()
-                        @* If at least one validation error exists, notify the user *@
-                        @Html.ValidationSummary("Account creation was unsuccessful. Please correct the errors and try again.", excludeFieldErrors: true, htmlAttributes: null)
+    <head>
+        <title>E-Books</title>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="~/css/Logo.css" />
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <!--Responsive Mobiel-->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta charset="utf-8" />
+    </head>
+    <body style="background-color:#BDE0FB">
+        <br />
+        <br />
+        <br />
+        <div class="row center-block">
+            <div class="col s12 col-md-offset-4">
+                <div class="card-panel">
+                    <div class="row">
+                        <form method="post">
+                            @AntiForgery.GetHtml()
+                            @* If at least one validation error exists, notify the user *@
+                            @Html.ValidationSummary("Account creation was unsuccessful. Please correct the errors and try again.", excludeFieldErrors: true, htmlAttributes: null)
 
-                        <fieldset>
-                            <legend>Registration Form</legend>
-                            <ol>
-                                <li class="email">
-                                    <label for="email" @if (!ModelState.IsValidField("email")) { <text> class="error-label" </text>  }>Email address</label>
-                                    <input type="text" id="email" name="email" value="@email" @Validation.For("email") />
-                                    @* Write any email validation errors to the page *@
-                                    @Html.ValidationMessage("email")
-                                </li>
-                                <li class="password">
-                                    <label for="password" @if (!ModelState.IsValidField("password")) { <text> class="error-label" </text>  }>Password</label>
-                                    <input type="password" id="password" name="password" @Validation.For("password") />
-                                    @* Write any password validation errors to the page *@
-                                    @Html.ValidationMessage("password")
-                                </li>
-                                <li class="confirm-password">
-                                    <label for="confirmPassword" @if (!ModelState.IsValidField("confirmPassword")) { <text> class="error-label" </text>  }>Confirm password</label>
-                                    <input type="password" id="confirmPassword" name="confirmPassword" @Validation.For("confirmPassword") />
-                                    @* Write any password validation errors to the page *@
-                                    @Html.ValidationMessage("confirmPassword")
-                                </li>
+                            <fieldset>
+                                <legend>Registration Form</legend>
+                                <ol>
+                                    <li class="email">
+                                        <label for="email" @if (!ModelState.IsValidField("email")) { <text> class="error-label" </text>   }>Email address</label>
+                                        <input type="text" id="email" name="email" value="@email" @Validation.For("email") />
+                                        @* Write any email validation errors to the page *@
+                                        @Html.ValidationMessage("email")
+                                    </li>
+                                    <li class="password">
+                                        <label for="password" @if (!ModelState.IsValidField("password")) { <text> class="error-label" </text>   }>Password</label>
+                                        <input type="password" id="password" name="password" @Validation.For("password") />
+                                        @* Write any password validation errors to the page *@
+                                        @Html.ValidationMessage("password")
+                                    </li>
+                                    <li class="confirm-password">
+                                        <label for="confirmPassword" @if (!ModelState.IsValidField("confirmPassword")) { <text> class="error-label" </text>   }>Confirm password</label>
+                                        <input type="password" id="confirmPassword" name="confirmPassword" @Validation.For("confirmPassword") />
+                                        @* Write any password validation errors to the page *@
+                                        @Html.ValidationMessage("confirmPassword")
+                                    </li>
 
-                            </ol>
-                            <input type="submit" value="Register" />
-                        </fieldset>
-                    </form>
+                                </ol>
+                                <input type="submit" value="Register" />
+                            </fieldset>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-</body>
+    </body>
 </html>

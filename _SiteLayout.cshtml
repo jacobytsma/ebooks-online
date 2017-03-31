@@ -1,81 +1,74 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <title>E-Books Online</title>
+        <link href="~/css/Logo.css" rel="stylesheet" type="text/css" />
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
-<head>
+        <link rel="stylesheet" href="~/css/main.css" />
+        <link rel="stylesheet" href="~/css/Logo.css" />
 
-    <title>E-Books</title>
-    <link href="~/css/Logo.css" rel="stylesheet" type="text/css" />
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="~/css/Logo.css" />
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
-    <!--Responsive Mobiel-->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <!--Responsive Mobiel-->
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
-</head>
-<body style="background-color:#BDE0FB">
-    <!--The Navbar Element-->
-    <nav class="navbar navbar-default">
-        <div class="container-fluid" style="background-color:dodgerblue">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="~/Default-Page.cshtml" style="color:black">E-Books Online</a>
-                
-                <img src="~/Images/child-reading-book_icon-icons.com_49293.png" height="50" width="50" />
+    </head>
+    <body>
+        <!--The Navbar Element-->
+        <header>
+            <nav class="navbar navbar-default">
+                <div class="container-fluid" style="background-color:dodgerblue">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="~/" style="color:black">E-Books Online</a>
+
+                        <img src="~/Images/child-reading-book_icon-icons.com_49293.png" height="50" width="50" />
+                    </div>
+                    <ul class="nav navbar-nav">
+                        <li><a href="~/ToevoegenBoek.cshtml" style="color:black">Toevoegen</a></li>
+                        <li><a href="~/AanpassenBoek.cshtml" style="color:black">Aanpassen</a></li>
+                        <li><a href="~/VerwijderBoek.cshtml" style="color:black">Verwijderen</a></li>
+                        <li><a href="#" style="color:black">Mijn Collectie</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="~/RegisterPage.cshtml" style="color:black"><span class="glyphicon glyphicon-user" style="color:black"></span> Sign Up</a></li>
+                        <li><a href="~/LoginPage.cshtml" style="color:black"><span class="glyphicon glyphicon-log-in" style="color:black"></span> Login</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <div class="main">
+            @RenderBody()
+            @RenderSection("script", required: false)
+        </div>
+
+        <footer>
+            <div class="navbar navbar-fixed-bottom">
+                <div class="container-fluid">
+                    <p><i style="text-align:right; font-size: 10px">Made with Bootstrap</i></p>
+                </div>
             </div>
-            <ul class="nav navbar-nav">
-                <li><a href="~/ToevoegenBoek.cshtml" style="color:black">Toevoegen</a></li>
-                <li><a href="~/AanpassenBoek.cshtml" style="color:black">Aanpassen</a></li>
-                <li><a href="~/VerwijderBoek.cshtml" style="color:black">Verwijderen</a></li>
-                <li><a href="#" style="color:black">Mijn Collectie</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="~/RegisterPage.cshtml" style="color:black"><span class="glyphicon glyphicon-user" style="color:black"></span> Sign Up</a></li>
-                <li><a href="~/LoginPage.cshtml" style="color:black"><span class="glyphicon glyphicon-log-in" style="color:black"></span> Login</a></li>
-            </ul>
-        </div>
-    </nav>
+        </footer>
 
-
-
-    <div class="navbar navbar-fixed-bottom">
-        <div class="container-fluid" style="background-color:dodgerblue">
-            <p><i style="text-align:right; font-size: 10px">Made with Bootstrap</i></p>
-        </div>
-    </div>  
-
-                     
-
-
-
-    <!-- JQuery Scripts-->
-    <script src="https://code.jquery.com/jquery-3.2.1.js"
-            integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
-            crossorigin="anonymous"></script>
-    @section script{
-        <script type="text/javascript">
-    $(function(){
-        $('tbody tr').hover( function(){
-            $(this).toggleClass('clickable');
-        }).on('click', function(){
-            location.href = '/Details/' + $(this).find('td:first').text();
-        });
-    });
-        </script>
-    }
-
-    </script>
-    <div id="main">
-        @RenderBody()
-        @RenderSection("script", required: false)
-    </div>
-</body>
+        @section script{
+            <script type="text/javascript">
+                $(function(){
+                    $('tbody tr').hover( function(){
+                        $(this).toggleClass('clickable');
+                    }).on('click', function(){
+                        location.href = '/Details/' + $(this).find('td:first').text();
+                    });
+                });
+            </script>
+        }
+        <!-- JQuery Scripts-->
+        <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8" s717jcizly3oi35eouye="" crossorigin="anonymous"></script>
+    </body>
 </html>
 
 

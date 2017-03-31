@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+body {
+    overflow-x: hidden;
+    font-size: 14px;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #BDE0FB;
+}
+
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+/* Quick reset */
+
+body { /* or any parent wrapper */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main {
+    flex: 1;
+}
+
+.alignleft {
+    float: left;
+}
+
+.alignright {
+    float: right;
+}
+
+.container label {
+    position: relative;
+}
+
+.container span::before, .container span::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+.container span.radio:hover {
+    cursor: pointer;
+}
+
+.container span.radio::before {
+    left: -52px;
+    width: 45px;
+    height: 25px;
+    background-color: #A8AAC1;
+    border-radius: 50px;
+}
+
+.container span.radio::after {
+    left: -49px;
+    width: 17px;
+    height: 17px;
+    border-radius: 10px;
+    background-color: #6C788A;
+    transition: left .25s, background-color .25s;
+}
+
+input[type="radio"]:checked + label span.radio::after {
+    left: -27px;
+    background-color: #EBFF43;
+}
