@@ -13,7 +13,11 @@
     <!--Responsive Mobiel-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
+    <style>
+        .nav-login li {
+            display:inline;
+        }
+    </style>
 </head>
 <body style="background-color:#BDE0FB">
     <!--The Navbar Element-->
@@ -30,17 +34,15 @@
                 <li><a href="~/VerwijderBoek.cshtml" style="color:black">Verwijderen</a></li>
                 @*<li><a href="#" style="color:black">Mijn Collectie</a></li>*@
             </ul>
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-right nav-login">
                 @if (WebSecurity.IsAuthenticated)
                 {
-                    <text>
-                        Hello,
-                        <a class="email" href="~/Account/Manage" title="Manage">@WebSecurity.CurrentUserName</a>!
-                        <form id="logoutForm" action="~/Account/Logout" method="post">
+                        <li><a class="email" href="~/Index.cshtml" title="Manage" style="color:white">@WebSecurity.CurrentUserName</a></li>
+                        <li id="logoutForm" action="~/LoginPage.cshtml" method="post" style="color:white">
                             @AntiForgery.GetHtml()
-                            <a href="javascript:document.getElementById('logoutForm').submit()">Log out</a>
-                        </form>
-                    </text>}
+                            <a href="javascript:document.getElementById('logoutForm').submit()" style="color:white">Log out</a>
+                        </li>
+                }
                 @*<li><a href="~/RegisterPage.cshtml" style="color:black"><span class="glyphicon glyphicon-user" style="color:black"></span> Sign Up</a></li>
                     <li><a href="~/Index.cshtml" style="color:black"><span class="glyphicon glyphicon-log-in" style="color:black"></span> Log out</a></li>*@
             </ul>
