@@ -26,7 +26,6 @@ body {
 }
 .head { background-color: #E8E8E8; font-weight: bold; color: #FFF; }
 .grid th, .grid td { border: 1px solid #C0C0C0; padding: 5px; border-collapse: collapse;}
-.alt { background-color: #E8E8E8; color: #000; }
  
 .clickable{
     cursor: pointer;
