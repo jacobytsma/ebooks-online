@@ -1,67 +1,116 @@
 @{
-     if (!WebSecurity.IsAuthenticated)
+    if (!WebSecurity.IsAuthenticated)
     {
         Response.Redirect("~/LoginPage?returnUrl="
             + Request.Url.LocalPath);
     }
-
     Layout = "~/_SiteLayout.cshtml";
 
+    var content = Request["content"];
+    string contentQuery = "";
+    bool hasTitleContent = false;
+    bool hasAuthorContent = false;
+    bool hasGenreContent = false;
+    bool hasRatingContent = false;
+    bool hasLangContent = false;
+
+    switch (content)
+    {
+        default:
+            contentQuery = "";
+            hasTitleContent = true;
+            break;
+        case "title":
+            hasTitleContent = true;
+            contentQuery = "Titel";
+            break;
+        case "author":
+            hasAuthorContent = true;
+            contentQuery = "Auteur";
+            break;
+        case "genre":
+            hasGenreContent = true;
+            contentQuery = "Genre";
+            break;
+        case "rating":
+            hasRatingContent = true;
+            contentQuery = "Waardering";
+            break;
+        case "lang":
+            hasLangContent = true;
+            contentQuery = "Taal";
+            break;
+    }
+
     var db = Database.Open("e-Books");
-    var selectCommand = "SELECT * FROM boeken";
-    var data = db.Query(selectCommand);
+    var query = "SELECT * FROM boeken";
+    var queryResult = db.Query(query);
+    if (contentQuery != "")
+    {
+        query = "SELECT * FROM boeken  WHERE " + contentQuery + " LIKE @0";
+        var filter = "%" + Request["filter"] + "%";
+        queryResult = db.Query(query, filter);
+    }
+
     var columns = new[] { "Titel", "Auteur", "Datum", "Waardering", "Taal", "Uitgever", "Genre" };
-    var grid = new WebGrid(data, ajaxUpdateContainerId: "grid", columnNames: columns);
+    var grid = new WebGrid(queryResult, columnNames: columns, canPage: false, canSort: true);
 
 }
+
 <!DOCTYPE html>
 <html>
 <head>
-
 </head>
 <body>
     <div class="container-fluid">
         <div class="row">
+            <div class="col-xs-12 col-sm-offset-2">
+                <h1>De E-Book Collectie</h1>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-xs-2">
-                <form class="panel">
-                    <h4 style="text-align:center;">Zoek Filter</h4>
-                    <div id="custom-search-input">
-                        <div class="input-group col-xs-12">
-                            <input type="text" class="form-control input-lg" placeholder="Boeken" />
-                            <span class="input-group-btn">
-                                <button class="btn btn-info btn-lg" type="button">
-                                    <i class="glyphicon glyphicon-search"></i>
-                                </button>
-                            </span>
+                <div class="panel" style="padding: 5px;">
+                    <form>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" name="filter" class="form-control input-lg" placeholder="Zoekterm..." value="@Request["filter"]" />
+                                <span class="input-group-btn">
+                                    <button class="btn btn-special btn-lg" type="submit">
+                                        <i class="glyphicon glyphicon-search" style="color: #BDE0FB"></i>
+                                    </button>
+                                </span>
+                            </div>
+                            <div class="input-group">
+                                <div class="radio container radio-special">
+                                    <input type="radio" name="content" id="radio-title" value="title" @Html.Raw(hasTitleContent ? "checked" : "") />
+                                    <label for="radio-title"><span class="radio">Titel</span></label>
+                                </div>
+                                <div class="radio container radio-special">
+                                    <input type="radio" name="content" id="radio-author" value="author" @Html.Raw(hasAuthorContent ? "checked" : "") />
+                                    <label for="radio-author"><span class="radio">Auteur</span></label>
+                                </div>
+                                <div class="radio container radio-special">
+                                    <input type="radio" name="content" id="radio-genre" value="genre" @Html.Raw(hasGenreContent ? "checked" : "") />
+                                    <label for="radio-genre"><span class="radio">Genre</span></label>
+                                </div>
+                                <div class="radio container radio-special">
+                                    <input type="radio" name="content" id="radio-rating" value="rating" @Html.Raw(hasRatingContent ? "checked" : "") />
+                                    <label for="radio-rating"><span class="radio">Waardering</span></label>
+                                </div>
+                                <div class="radio container radio-special">
+                                    <input type="radio" name="content" id="radio-lang" value="lang" @Html.Raw(hasLangContent ? "checked" : "") />
+                                    <label for="radio-lang"><span class="radio">Taal</span></label>
+                                </div>
+                            </div>
+
                         </div>
-                    </div>
-                    <section id="first" class="section">
-                        <div class="container">
-                            <input type="radio" name="group1" id="radio-1">
-                            <label for="radio-1"><span class="radio">Titel</span></label>
-                        </div>
-                        <div class="container">
-                            <input type="radio" name="group1" id="radio-2">
-                            <label for="radio-2"><span class="radio">Auteur</span></label>
-                        </div>
-                        <div class="container">
-                            <input type="radio" name="group1" id="radio-3">
-                            <label for="radio-3"><span class="radio">Genre</span></label>
-                        </div>
-                        <div class="container">
-                            <input type="radio" name="group1" id="radio-4">
-                            <label for="radio-4"><span class="radio">Waardering</span></label>
-                        </div>
-                        <div class="container">
-                            <input type="radio" name="group1" id="radio-5">
-                            <label for="radio-5"><span class="radio">Taal</span></label>
-                        </div>
-                    </section>
-                </form>
+                    </form>
+                </div>
             </div>
             <!-- Middelste table-->
             <div class="col-xs-8">
-                <div id="grid">
+                <div id="grid" class="table-special">
                     @grid.GetHtml(
                                          tableStyle: "table",
                                          headerStyle: "head",
@@ -71,10 +120,10 @@
                         grid.Column(format:
                         @<a style="display:none;" type="hidden">
                             @item.ID<a style="display:none;" type="hidden">-.pdf</a>
-                        <a download="@item.id-.pdf" href="~/uploads/@item.ID-.pdf" title="ImageName">
-                            <img alt="ImageName" src="~/Images/logo.gif" height="35" width="35">
+                            <a download="@item.id-.pdf" href="~/uploads/@item.ID-.pdf" title="ImageName">
+                                <img alt="ImageName" src="~/Images/logo.gif" height="35" width="35">
+                            </a>
                         </a>
-                    </a>
                                                     ),
 
 
@@ -89,7 +138,6 @@
                                  )
                 </div>
             </div>
-
             <div class="col-xs-2">
                 <form class="panel">
                     <div style="text-align: center">
@@ -125,7 +173,6 @@
                 </form>
             </div>
         </div>
-
         @section script{
             <script type="text/javascript">
                 $(function () {
@@ -138,7 +185,6 @@
             </script>
         }
     </div>
-
 
     <!-- JQuery Scripts-->
     <script src="https://code.jquery.com/jquery-3.2.1.js"

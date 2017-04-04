@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+body {
+    overflow-x: hidden;
+    font-size: 14px;
+    font-family: 'Open Sans', sans-serif;
+    background: #BDE0FB;
+}
+
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+/* Quick reset */
+
+body { /* or any parent wrapper */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main {
+    flex: 1;
+}
+
+.alignleft {
+    float: left;
+}
+
+.alignright {
+    float: right;
+}
+
+.container label {
+    position: relative;
+}
+
+.container span::before, .container span::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+.container span.radio:hover {
+    cursor: pointer;
+}
+
+.container span.radio::before {
+    left: -52px;
+    width: 45px;
+    height: 25px;
+    background-color: #BDE0FB;
+    border-radius: 50px;
+}
+
+.container span.radio::after {
+    left: -49px;
+    width: 17px;
+    height: 17px;
+    border-radius: 10px;
+    background-color: dodgerblue;
+    transition: left .25s, background-color .25s;
+}
+
+input[type="radio"]:checked + label span.radio::after {
+    left: -27px;
+    background-color: #ff9500;
+}
+
+.center-block {
+    float: none;
+}
+
+.radio-special{
+    margin-left: 15px;
+}
+
+.btn-special {
+    background-color: dodgerblue;
+}
+
+.radio-special input[type="radio"]
+{
+    margin-top: 10px;
+}
+
+.table-special .table{
+    border: none;
+}
+.table-special .table tbody:before {
+    content: "-";
+    display: block;
+    line-height: 1.5em;
+    color: transparent;
+}
+
+.table-special .table .head{
+    background-color: white;
+    border: 1px solid transparent;
+    border-radius: 8px;
+}
+
+.table-special .table > thead > tr > th{
+    border-bottom: 2px solid dodgerblue;
+}
+.table-special .table > tbody > tr > td{
+    border-top: none;
+}
+.table-special tr:nth-child(2n+1) {
+    background-color: #fff9f0;
+}
+.table-special tr:nth-child(2n) {
+    background-color: #dbf1ff;
+}
+.table-special .table > thead:first-child > tr:first-child > th a {
+    text-transform: uppercase;
+    font-size: 16px;
+}
+.nav.navbar-nav li {
+    color: black;
+    text-shadow: 1px 1px white;
+}
+.effect6
+{
+  	position:relative;       
+    -webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+       -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+            box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+}
+.effect6:before, .effect6:after
+{
+	content:"";
+    position:absolute; 
+    z-index:-1;
+    -webkit-box-shadow:0 0 20px rgba(0,0,0,0.8);
+    -moz-box-shadow:0 0 20px rgba(0,0,0,0.8);
+    box-shadow:0 0 20px rgba(0,0,0,0.8);
+    top:50%;
+    bottom:0;
+    left:10px;
+    right:10px;
+    -moz-border-radius:100px / 10px;
+    border-radius:100px / 10px;
+}
+.effect6:after {
+    right: 10px;
+    left: auto;
+    -webkit-transform: skew(8deg) rotate(3deg);
+    -moz-transform: skew(8deg) rotate(3deg);
+    -ms-transform: skew(8deg) rotate(3deg);
+    -o-transform: skew(8deg) rotate(3deg);
+    transform: skew(8deg) rotate(3deg);
+}
+.nav.navbar-nav li a {
+    color: black;
+}
+.nav.navbar-nav li,
+.nav.navbar-nav li a {
+    transition: all .25s cubic-bezier(.39,.58,.57,1);
+}
+.nav.navbar-nav li:hover{
+    background-color: #fc6e51;
+}
+.nav.navbar-nav li:hover a {
+    color: white;
+}
