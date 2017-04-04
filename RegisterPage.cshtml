@@ -3,7 +3,6 @@
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 }
-
 @{
 
     Page.Title = "Register";
@@ -95,7 +94,6 @@
     }
 }
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -116,45 +114,49 @@
     <br />
     <br />
     <br />
-    <div class="row center-block">
-        <div class="col s12 col-md-offset-4">
-            <div class="card-panel">
-                <div class="row">
-                    <form method="post">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3">
+                <form class="panel" method="post">
+                    <div class="text-center">
+                        <br /><br />
+                        <img src="~/Images/child-reading-book_icon-icons.com_49293.png" height="150" width="150" />
+                        <br /><br /><br />
                         @AntiForgery.GetHtml()
                         @* If at least one validation error exists, notify the user *@
                         @Html.ValidationSummary("Account creation was unsuccessful. Please correct the errors and try again.", excludeFieldErrors: true, htmlAttributes: null)
-
                         <fieldset>
-                            <legend>Registration Form</legend>
-                            <ol>
+                            <h3>Account Registratie</h3>
+                            <br /><br />
+                            <ol style="list-style:none">
                                 <li class="email">
-                                    <label for="email" @if (!ModelState.IsValidField("email")) { <text> class="error-label" </text>  }>Email address</label>
+                                    <label for="email" @if (!ModelState.IsValidField("email")) { <text> class="error-label" </text>    }>Email address</label>
                                     <input type="text" id="email" name="email" value="@email" @Validation.For("email") />
                                     @* Write any email validation errors to the page *@
                                     @Html.ValidationMessage("email")
                                 </li>
                                 <li class="password">
-                                    <label for="password" @if (!ModelState.IsValidField("password")) { <text> class="error-label" </text>  }>Password</label>
+                                    <label for="password" @if (!ModelState.IsValidField("password")) { <text> class="error-label" </text>    }>Password</label>
                                     <input type="password" id="password" name="password" @Validation.For("password") />
                                     @* Write any password validation errors to the page *@
                                     @Html.ValidationMessage("password")
                                 </li>
                                 <li class="confirm-password">
-                                    <label for="confirmPassword" @if (!ModelState.IsValidField("confirmPassword")) { <text> class="error-label" </text>  }>Confirm password</label>
+                                    <label for="confirmPassword" @if (!ModelState.IsValidField("confirmPassword")) { <text> class="error-label" </text>    }>Confirm password</label>
                                     <input type="password" id="confirmPassword" name="confirmPassword" @Validation.For("confirmPassword") />
                                     @* Write any password validation errors to the page *@
                                     @Html.ValidationMessage("confirmPassword")
                                 </li>
-
                             </ol>
+                            <br /><br />
                             <input type="submit" value="Register" />
+                            <br />
                         </fieldset>
-                    </form>
-                </div>
+                        <br /><br />
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-
 </body>
 </html>
