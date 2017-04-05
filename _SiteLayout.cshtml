@@ -13,7 +13,6 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <!--Responsive Mobiel-->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <style>
         .nav-login li {
@@ -24,9 +23,9 @@
 <body style="background-color:#BDE0FB">
     <!--The Navbar Element-->
     <nav class="navbar navbar-default">
-        <div class="container-fluid" style="background-color:dodgerblue">
+        <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="~/Default-Page.cshtml" style="color:black">E-Books Online</a>
+                <a class="navbar-brand" href="~/Default-Page.cshtml">E-Books Online</a>
 
                 <img src="~/Images/child-reading-book_icon-icons.com_49293.png" height="50" width="50" />
             </div>
@@ -34,7 +33,7 @@
                 <li><a href="~/ToevoegenBoek.cshtml">Toevoegen</a></li>
                 <li><a href="~/AanpassenBoek.cshtml">Aanpassen</a></li>
                 <li><a href="~/VerwijderBoek.cshtml">Verwijderen</a></li>
-                @*<li><a href="#" style="color:black">Mijn Collectie</a></li>*@
+                @*<li><a href="#">Mijn Collectie</a></li>*@
             </ul>
             <ul class="nav navbar-nav navbar-right nav-login">
                 @if (WebSecurity.IsAuthenticated)

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|Fira+Sans');
 
 body {
     overflow-x: hidden;
@@ -6,7 +6,9 @@ body {
     font-family: 'Open Sans', sans-serif;
     background: #BDE0FB;
 }
-
+h1,h2,h3,h4,h5,h6{
+    font-family: 'Fira-Sans', sans-serif;
+}
 * {
     margin: 0;
     box-sizing: border-box;
@@ -30,6 +32,20 @@ body { /* or any parent wrapper */
 .alignright {
     float: right;
 }
+.navbar.navbar-default .container-fluid {
+    background-color: dodgerblue;
+}
+.navbar-header .navbar-brand{
+    color: black;
+    font-weight: bold;
+    font-family: 'Fira Sans', sans-serif;
+    transition: all 0.12s ease-out;
+    text-shadow: 1px 1px 0px transparent;
+}
+.navbar-header .navbar-brand:hover{
+    color: #BDE0FB;
+    text-shadow:  1px 1px 1px #000;
+}
 
 .container label {
     position: relative;
@@ -43,8 +59,12 @@ body { /* or any parent wrapper */
     margin: auto;
 }
 
+.container span.radio {
+    transition: color 0.12s ease-out;
+}
 .container span.radio:hover {
     cursor: pointer;
+    color: dodgerblue;
 }
 
 .container span.radio::before {
@@ -79,6 +99,20 @@ input[type="radio"]:checked + label span.radio::after {
 
 .btn-special {
     background-color: dodgerblue;
+    transition: all 0.12s ease-in;
+}
+
+.btn-special:hover {
+    background-color: #BDE0FB;
+}
+
+.btn-special .glypicon {
+    color: #BDE0FB;
+    transition: color 0.24s ease-out;
+}
+
+.btn-special:hover .glyphicon {
+    color: #ff9500;
 }
 
 .radio-special input[type="radio"]
@@ -118,9 +152,18 @@ input[type="radio"]:checked + label span.radio::after {
     text-transform: uppercase;
     font-size: 16px;
 }
-.nav.navbar-nav li {
+.nav.navbar-nav li a {
     color: black;
-    text-shadow: 1px 1px white;
+}
+.nav.navbar-nav li,
+.nav.navbar-nav li a {
+    transition: all .25s cubic-bezier(.39,.58,.57,1);
+}
+.nav.navbar-nav li:hover{
+    background-color: #fc6e51;
+}
+.nav.navbar-nav li:hover a {
+    color: white;
 }
 .effect6
 {
@@ -152,17 +195,4 @@ input[type="radio"]:checked + label span.radio::after {
     -ms-transform: skew(8deg) rotate(3deg);
     -o-transform: skew(8deg) rotate(3deg);
     transform: skew(8deg) rotate(3deg);
-}
-.nav.navbar-nav li a {
-    color: black;
-}
-.nav.navbar-nav li,
-.nav.navbar-nav li a {
-    transition: all .25s cubic-bezier(.39,.58,.57,1);
-}
-.nav.navbar-nav li:hover{
-    background-color: #fc6e51;
-}
-.nav.navbar-nav li:hover a {
-    color: white;
 }
