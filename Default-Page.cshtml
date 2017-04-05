@@ -57,136 +57,140 @@
 
 }
 
-<!DOCTYPE html>
-<html>
-    <head>
-    </head>
-    <body>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-xs-12 col-sm-offset-2">
-                    <h1>De E-Book Collectie</h1>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-2">
-                    <div class="panel" style="padding: 5px;">
-                        <form>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <input type="text" name="filter" class="form-control input-lg search-special" placeholder="Zoekterm..." value="@Request["filter"]" tabindex="1" />
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-special btn-lg" type="submit">
-                                            <i class="glyphicon glyphicon-search"></i>
-                                        </button>
-                                    </span>
-                                </div>
-                                <div class="input-group">
-                                    <div class="radio container radio-special">
-                                        <input type="radio" name="content" id="radio-title" value="title" @Html.Raw(hasTitleContent ? "checked" : "") />
-                                        <label for="radio-title"><span class="radio">Titel</span></label>
-                                    </div>
-                                    <div class="radio container radio-special">
-                                        <input type="radio" name="content" id="radio-author" value="author" @Html.Raw(hasAuthorContent ? "checked" : "") />
-                                        <label for="radio-author"><span class="radio">Auteur</span></label>
-                                    </div>
-                                    <div class="radio container radio-special">
-                                        <input type="radio" name="content" id="radio-genre" value="genre" @Html.Raw(hasGenreContent ? "checked" : "") />
-                                        <label for="radio-genre"><span class="radio">Genre</span></label>
-                                    </div>
-                                    <div class="radio container radio-special">
-                                        <input type="radio" name="content" id="radio-rating" value="rating" @Html.Raw(hasRatingContent ? "checked" : "") />
-                                        <label for="radio-rating"><span class="radio">Waardering</span></label>
-                                    </div>
-                                    <div class="radio container radio-special">
-                                        <input type="radio" name="content" id="radio-lang" value="lang" @Html.Raw(hasLangContent ? "checked" : "") />
-                                        <label for="radio-lang"><span class="radio">Taal</span></label>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <!-- Middelste table-->
-                <div class="col-xs-8">
-                    <div id="grid" class="table-special">
-                        @grid.GetHtml(
-                                             tableStyle: "table",
-                                             headerStyle: "head",
-                                             alternatingRowStyle: "alt",
-                                              columns: grid.Columns(
-                        
-                        grid.Column(format:
-                        @<a style="display:none;" type="hidden">
-                            @item.ID<a style="display:none;" type="hidden">-.pdf</a>
-                            <a download="@item.id-.pdf" href="~/uploads/@item.ID-.pdf" title="ImageName">
-                                <img alt="ImageName" src="~/Images/logo.gif" height="35" width="35">
-                            </a>
-                        </a>
-                        ),
-                        
-                        
-                        grid.Column("Titel"),
-                        grid.Column("Auteur"),
-                        grid.Column("Datum"),
-                        grid.Column("Waardering"),
-                        grid.Column("Taal"),
-                        grid.Column("Uitgever"),
-                        grid.Column("Genre")
-                        )
-                         )
-                    </div>
-                </div>
-                <div class="col-xs-2">
-                    <form class="panel">
-                        <div style="text-align: center">
-                            <img src="~/Images/child-reading-book_icon-icons.com_49293.png" height="60" width="60" alt="Book icon" class="img-rounded">
-                        </div>
-                        <br />
-                        <div style="width: 80%;display: block;margin: 0 auto;">
-                            <div style="display:inline-block;width: calc(50% - 2px)">
-                                <p class="alignright">Titel:</p>
-                                <div style="clear: both;"></div>
-                                <p class="alignright">Auteur:</p>
-                                <div style="clear: both;"></div>
-                                <p class="alignright">Taal:</p>
-                                <div style="clear: both;"></div>
-                                <p class="alignright">Waardering:</p>
-                                <div style="clear: both;"></div>
-                                <p class="alignright">Genre:</p>
-                                <div style="clear: both;"></div>
-                            </div>
-                            <div style="display:inline-block;width: calc(50% - 2px)">
-                                <p class="alignleft">.......</p>
-                                <div style="clear: both;"></div>
-                                <p class="alignleft">.......</p>
-                                <div style="clear: both;"></div>
-                                <p class="alignleft">.......</p>
-                                <div style="clear: both;"></div>
-                                <p class="alignleft">.......</p>
-                                <div style="clear: both;"></div>
-                                <p class="alignleft">.......</p>
-                                <div style="clear: both;"></div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            @section script{
-                <script type="text/javascript">
-                    $(function () {
-                        $('tbody tr').hover(function () {
-                            $(this).toggleClass('clickable');
-                        }).on('click', function () {
-                            location.href = '/Details/' + $(this).find('td:first').text();
-                        });
-                    });
-                </script>
-            }
+@section script{
+    <script>
+        
+        // 
+        $(function () {
+            $('tbody tr').on('click', function () {
+                var id = $(this).find('td:first').text();
+                @*var path = @;*@
+                var data = @File.ReadAllBytes(Server.MapPath("~/uploads/17.pdf"));
+                var blob = new Blob([data], { type: 'application/pdf' });
+                var filename = "17.pdf";
+                if (window.navigator.msSaveOrOpenBlob) {
+                    window.navigator.msSaveBlob(blob, filename);
+                }
+                else {
+                    var elem = window.document.createElement('a');
+                    elem.href = window.URL.createObjectURL(blob);
+                    elem.download = filename;
+                    document.body.appendChild(elem);
+                    elem.click();
+                    document.body.removeChild(elem);
+                }
+            });
+        });
+    </script>
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-md-offset-2">
+            <h1>De E-Book Collectie</h1>
         </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-md-2">
+            <div class="panel" style="padding: 5px;">
+                <form>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" name="filter" class="form-control input-lg search-special" placeholder="Zoekterm..." value="@Request["filter"]" tabindex="1" />
+                            <span class="input-group-btn">
+                                <button class="btn btn-special btn-lg" type="submit">
+                                    <i class="glyphicon glyphicon-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                        <div class="input-group div-centered">
+                            <div class="radio container radio-special">
+                                <input type="radio" name="content" id="radio-title" value="title" @Html.Raw(hasTitleContent ? "checked" : "") />
+                                <label for="radio-title"><span class="radio">Titel</span></label>
+                            </div>
+                            <div class="radio container radio-special">
+                                <input type="radio" name="content" id="radio-author" value="author" @Html.Raw(hasAuthorContent ? "checked" : "") />
+                                <label for="radio-author"><span class="radio">Auteur</span></label>
+                            </div>
+                            <div class="radio container radio-special">
+                                <input type="radio" name="content" id="radio-genre" value="genre" @Html.Raw(hasGenreContent ? "checked" : "") />
+                                <label for="radio-genre"><span class="radio">Genre</span></label>
+                            </div>
+                            <div class="radio container radio-special">
+                                <input type="radio" name="content" id="radio-rating" value="rating" @Html.Raw(hasRatingContent ? "checked" : "") />
+                                <label for="radio-rating"><span class="radio">Waardering</span></label>
+                            </div>
+                            <div class="radio container radio-special">
+                                <input type="radio" name="content" id="radio-lang" value="lang" @Html.Raw(hasLangContent ? "checked" : "") />
+                                <label for="radio-lang"><span class="radio">Taal</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Middelste table-->
+        <div class="col-xs-12 col-md-8">
+            <div id="grid" class="table-special">
+                @grid.GetHtml(
+                                     tableStyle: "table",
+                                     headerStyle: "head",
+                                     alternatingRowStyle: "alt",
+                                      columns: grid.Columns(
 
-        <!-- JQuery Scripts-->
-        <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8" s717jcizly3oi35eouye="" crossorigin="anonymous"></script>
-    </body>
-</html>
+                grid.Column(format:
+                @<a href="Download.cshtml?id=@item.ID&name=@HttpUtility.UrlEncode(item.Titel)">
+                        <img alt="ImageName" src="~/Images/logo.gif" height="35" width="35">
+                    </a>
+                ),
+
+
+                grid.Column("Titel"),
+                grid.Column("Auteur"),
+                grid.Column("Datum"),
+                grid.Column("Waardering"),
+                grid.Column("Taal"),
+                grid.Column("Uitgever"),
+                grid.Column("Genre")
+                )
+                 )
+            </div>
+        </div>
+        <div class="hidden-xs hidden-sm col-md-2">
+            <form class="panel">
+                <div style="text-align: center">
+                    <img src="~/Images/child-reading-book_icon-icons.com_49293.png" height="60" width="60" alt="Book icon" class="img-rounded">
+                </div>
+                <br />
+                <div style="width: 80%;display: block;margin: 0 auto;">
+                    <div style="display:inline-block;width: calc(50% - 2px)">
+                        <p class="alignright">Titel:</p>
+                        <div style="clear: both;"></div>
+                        <p class="alignright">Auteur:</p>
+                        <div style="clear: both;"></div>
+                        <p class="alignright">Taal:</p>
+                        <div style="clear: both;"></div>
+                        <p class="alignright">Waardering:</p>
+                        <div style="clear: both;"></div>
+                        <p class="alignright">Genre:</p>
+                        <div style="clear: both;"></div>
+                    </div>
+                    <div style="display:inline-block;width: calc(50% - 2px)">
+                        <p class="alignleft">.......</p>
+                        <div style="clear: both;"></div>
+                        <p class="alignleft">.......</p>
+                        <div style="clear: both;"></div>
+                        <p class="alignleft">.......</p>
+                        <div style="clear: both;"></div>
+                        <p class="alignleft">.......</p>
+                        <div style="clear: both;"></div>
+                        <p class="alignleft">.......</p>
+                        <div style="clear: both;"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<br />

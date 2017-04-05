@@ -8,8 +8,6 @@
         <link rel="stylesheet" href="~/css/Logo.css" />
         <!-- Optional theme -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-        <!-- Latest compiled and minified JavaScript -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <!--Responsive Mobiel-->
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     </head>
@@ -33,7 +31,9 @@
                     {
                         <li><a class="email" href="~/Index.cshtml" title="Manage" style="color:white">@WebSecurity.CurrentUserName</a></li>
                         <li style="color:white">
-                            <form id="logoutForm" action="~/LoginPage.cshtml" method="post" style="display: none;"></form>
+                            <form id="logoutForm" action="~/LoginPage.cshtml" method="post" style="display: none;">
+                            <input type="text" name="__RequestVerificationToken" value="@Request.Cookies["__RequestVerificationToken"]"/>
+                            </form>
                             @AntiForgery.GetHtml()
                             <a href="javascript:document.getElementById('logoutForm').submit()" style="color:white">Log out</a>
                         </li>
@@ -43,31 +43,16 @@
                 </ul>
             </div>
         </nav>
-
-        <div class="navbar navbar-fixed-bottom">
-            <div class="container-fluid" style="background-color:dodgerblue">
-                <p><i style="text-align:right; font-size: 10px">Made with Bootstrap</i></p>
-            </div>
-        </div>
-
-
-        <!-- JQuery Scripts-->
-        <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8" s717jcizly3oi35eouye="" crossorigin="anonymous"></script>
-        @section script{
-            <script type="text/javascript">
-                $(function () {
-                    $('tbody tr').hover(function () {
-                        $(this).toggleClass('clickable');
-                    }).on('click', function () {
-                        location.href = '/Details/' + $(this).find('td:first').text();
-                    });
-                });
-            </script>
-        }
-    </script>
         <div id="main">
             @RenderBody()
-            @RenderSection("script", required: false)
         </div>
+        <footer>
+            <p>Made with &#9829; in Bootstrap</p>
+        </footer>
+        <!-- JQuery Scripts-->
+        <script src="js/jquery.js"></script>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="js/bootstrap/bootstrap.min.js"></script>
+        @RenderSection("script", required: false)
     </body>
 </html>

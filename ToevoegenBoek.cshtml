@@ -1,5 +1,9 @@
 @{
-
+    if (!WebSecurity.IsAuthenticated)
+    {
+        Response.Redirect("~/LoginPage?returnUrl="
+            + Request.Url.LocalPath);
+    }
     Layout = "~/_SiteLayout.cshtml";
 
     Validation.RequireField("Titel", "Wat is de titel van het boek?");
@@ -9,8 +13,8 @@
     Validation.RequireField("Taal", "Welk taal is het boek?");
     Validation.RequireField("Uitgever", "Wie is de uitgever?");
     Validation.RequireField("Genre", "Welk genre is het boek?");
-    Validation.RequireField("Foto", "Voeg een foto van de cover toe");
-    Validation.RequireField("Bestand", "Upload het bestandstype .PDF");
+    //Validation.RequireField("Foto", "Voeg een foto van de cover toe");
+    //Validation.RequireField("Bestand", "Upload het bestandstype .PDF");
 
     string titel = "Titel";
     string auteur = "Auteur";
@@ -19,8 +23,8 @@
     string taal = "Taal";
     string uitgever = "Uitgever";
     string genre = "Genre";
-    //var foto = default;
-    //var bestand = default;
+    HttpPostedFileBase foto;
+    HttpPostedFileBase bestand;
 
 
 
@@ -28,20 +32,29 @@
     {
         if (Validation.IsValid())
         {
-            titel = Request.Form["Titel"];
-            auteur = Request.Form["Auteur"];
-            datum = Request.Form["Datum"];
+            titel = Request["Titel"];
+            auteur = Request["Auteur"];
+            datum = Request["Datum"];
             waard = Convert.ToInt32(Request.Form["Waardering"]);
-            taal = Request.Form["Taal"];
-            uitgever = Request.Form["Uitgever"];
-            genre = Request.Form["Genre"];
-            //foto = Request.Form["Foto"];
-            //bestand = Request.Form["Bestand"];
+            taal = Request["Taal"];
+            uitgever = Request["Uitgever"];
+            genre = Request["Genre"];
+            foto = Request.Files[0];
+            bestand = Request.Files[1];
 
             var db = Database.Open("e-Books");
             var insertCommand =
                 "INSERT INTO boeken (Titel, Auteur, Datum, Waardering, Taal, Uitgever, Genre) Values(@0, @1, @2, @3, @4, @5, @6)";
             db.Execute(insertCommand, titel, auteur, datum, waard, taal, uitgever, genre);
+
+            var lastInsertId = db.GetLastInsertId();
+            var servPath = Server.MapPath("~/uploads/");
+            var coverPath = servPath + "cover-" + lastInsertId + Path.GetExtension(foto.FileName);         
+            var filePath = servPath + lastInsertId + Path.GetExtension(bestand.FileName);
+            foto.SaveAs(coverPath);
+            bestand.SaveAs(filePath);
+
+
             Response.Redirect("~/Default-Page.cshtml");
         }
     }
@@ -55,7 +68,7 @@
                 <!--Toevoegen boek-->
                 <h2>Toevoegen van boeken</h2>
                 @Html.ValidationSummary()
-                <form id="upload" method="post">
+                <form id="upload" method="post" enctype="multipart/form-data">
                     <fieldset>
                         <h3>Voeg een boek toe</h3>
                         <br />
@@ -97,14 +110,14 @@
                         </p>
                         <p>
                             <label for="Foto">Foto:</label>
-                            <input type="file" name="Foto" value="@Request.Form["Foto"]" />
-                            @Html.ValidationMessage("Foto")
+                            <input type="file" name="Foto" value="@Request.Form["Foto"]" accept="image/*" />
+
                         </p>
 
                         <p>
                             <label for="Bestand">Bestand:</label>
-                            <input type="file" name="Bestand" value="@Request.Form["Bestand"]" />
-                            @Html.ValidationMessage("Bestand")
+                            <input type="file" name="Bestand" value="@Request.Form["Bestand"]" accept="application/pdf" />
+
                         </p>
                         <br /><br />
                         <p><input type="submit" name="buttonSubmit" value="Voeg Boek toe" /></p>

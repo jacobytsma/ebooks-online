@@ -1,4 +1,10 @@
-﻿@{Layout = "~/_SiteLayout.cshtml";
+﻿@{
+  if (!WebSecurity.IsAuthenticated)
+    {
+        Response.Redirect("~/LoginPage?returnUrl="
+            + Request.Url.LocalPath);
+    }
+  Layout = "~/_SiteLayout.cshtml";
     Page.Title = "Verwijderen Boek";
     var titel = "";
     var auteur = "";
@@ -59,73 +65,61 @@
     }
 }
 
+@Html.ValidationSummary()
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-4">
+            <h3>Boek verwijderen</h3>
+            <br />
+            <h4>Boek Informatie</h4>
 
-<!DOCTYPE html>
-
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <!--method displays all the validation messages in a list -->
-    @Html.ValidationSummary()
-</head>
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-6 col-lg-offset-4">
-                <h3>Boek verwijderen</h3>
-                <br />
-                <h4>Boek Informatie</h4>
-
-                <!--wordt searchgenre opgehaald, zoekbalk en submitgenre button aangemaakt en blijft de ingevoerde text staan in het textvak-->
-                <form method="get">
-                    <div>
-                        <label for="searchGenre">Genre:</label>
-                        <input type="text" name="searchGenre" value="@Request.QueryString["searchGenre"]" />
-                        <input type="Submit" value="Search Genre" /><br />
-                        (Laat leeg om alle boeken te zien.)<br />
-                    </div>
-
-                    <!--wordt searchtitel opgehaald, zoekbalk en submittitel button aangemaakt en blijft de ingevoerde text staan in het textvak-->
-                    <div>
-                        <label for="SearchTitle">Titel:</label>
-                        <input type="text" name="searchTitle" value="@Request.QueryString["searchTitle"]" />
-                        <input type="Submit" value="Search Title" /><br />
-                    </div>
-                </form>
-
+            <!--wordt searchgenre opgehaald, zoekbalk en submitgenre button aangemaakt en blijft de ingevoerde text staan in het textvak-->
+            <form method="get">
                 <div>
-                    <!--worden de gegevens van de database in een tabel geplaatst, wordt de layout van de tabel aangemaakt en geeft hij voor elk item een id in de link -->
-                    @grid.GetHtml(
-                                     tableStyle: "grid",
-                                     headerStyle: "head",
-                                     alternatingRowStyle: "alt",
-                                columns: grid.Columns(
-                                grid.Column(format: @<a style="display:none;" type="hidden">@item.ID</a>),
-                                grid.Column("Titel"),
-                                grid.Column("Genre")))
-
-
-
+                    <label for="searchGenre">Genre:</label>
+                    <input type="text" name="searchGenre" value="@Request.QueryString["searchGenre"]" />
+                    <input type="Submit" value="Search Genre" /><br />
+                        (Laat leeg om alle boeken te zien.)<br />
                 </div>
-                <!--bij aanraking krijgt rij een kleur en je kunt de rij aanklikken en gaat hij naar een pagina met het boek dat verwijderd moet worden -->
-                @section script{
-                    <script type="text/javascript">
-                        $(function () {
-                            $('tbody tr').hover(function () {
-                                $(this).toggleClass('clickable');
-                            }).on('click', function () {
-                                location.href = '/VerwijderBoek2?id=' + $(this).find('td:first').text();
 
-                            });
-                        });
-                    </script>
-                }
+                <!--wordt searchtitel opgehaald, zoekbalk en submittitel button aangemaakt en blijft de ingevoerde text staan in het textvak-->
+                <div>
+                    <label for="SearchTitle">Titel:</label>
+                    <input type="text" name="searchTitle" value="@Request.QueryString["searchTitle"]" />
+                    <input type="Submit" value="Search Title" /><br />
+                </div>
+            </form>
 
-                <p><a href="~/Default-Page">Return</a></p>
-
-
+            <div>
+                <!--worden de gegevens van de database in een tabel geplaatst, wordt de layout van de tabel aangemaakt en geeft hij voor elk item een id in de link -->
+                @grid.GetHtml(
+                                 tableStyle: "grid",
+                                 headerStyle: "head",
+                                 alternatingRowStyle: "alt",
+                            columns: grid.Columns(
+                            grid.Column(format:
+                @<a style="display:none;" type="hidden">@item.ID</a>),
+                grid.Column(format: @<a style="display:none;" type="hidden">@item.ID</a>),
+                grid.Column("Titel"),
+                grid.Column("Genre")))
             </div>
+            <!--bij aanraking krijgt rij een kleur en je kunt de rij aanklikken en gaat hij naar een pagina met het boek dat verwijderd moet worden -->
+            @section script{
+                <script>
+                    $(function () {
+                        $('tbody tr').hover(function () {
+                            $(this).toggleClass('clickable');
+                        }).on('click', function () {
+                            location.href = '/VerwijderBoek2?id=' + $(this).find('td:first').text();
+                    
+                        });
+                    });
+                </script>
+            }
+
+            <p><a href="~/Default-Page">Return</a></p>
+
+
         </div>
     </div>
-</body>
-</html>
+</div>
