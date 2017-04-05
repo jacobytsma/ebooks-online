@@ -2,15 +2,15 @@
 
     Layout = "~/_SiteLayout.cshtml";
 
-    Validation.RequireField("Titel", "Je moet een titel van het boek toevoegen");
-    Validation.RequireField("Auteur", "Voeg een auteur toe");
-    Validation.RequireField("Datum", "Voeg een jaar van uitgeven aan");
+    Validation.RequireField("Titel", "Wat is de titel van het boek?");
+    Validation.RequireField("Auteur", "Wie is de auteur?");
+    Validation.RequireField("Datum", "Wanneer is het boek uitgegeven?");
     Validation.RequireField("Waardering", "Waardering van het boek is?");
-    Validation.RequireField("Taal", "Welk taal is het boek");
-    Validation.RequireField("Uitgever", "Uitgever is?");
-    Validation.RequireField("Genre", "Welk genre is het boek");
-    //Validation.RequireField("Foto", "voeg een foto van de cover toe");
-    //Validation.RequireField("Bestand", "Upload het bestandstype .PDF");
+    Validation.RequireField("Taal", "Welk taal is het boek?");
+    Validation.RequireField("Uitgever", "Wie is de uitgever?");
+    Validation.RequireField("Genre", "Welk genre is het boek?");
+    Validation.RequireField("Foto", "Voeg een foto van de cover toe");
+    Validation.RequireField("Bestand", "Upload het bestandstype .PDF");
 
     string titel = "Titel";
     string auteur = "Auteur";
@@ -47,91 +47,71 @@
     }
 
 }
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-5 col-lg-offset-3">
+            <div class="text-center">
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>E-Books</title>
+                <!--Toevoegen boek-->
+                <h2>Toevoegen van boeken</h2>
+                @Html.ValidationSummary()
+                <form id="upload" method="post">
+                    <fieldset>
+                        <h3>Voeg een boek toe</h3>
+                        <br />
+                        <!-- Lijst met Toevoegende-->
+                        <p>
+                            <label for="titel">Titel:</label>
+                            <input type="text" name="titel" value="@Request.Form["titel"]" />
+                            @Html.ValidationMessage("titel")
+                        </p>
+                        <p>
+                            <label for="auteur">Auteur:</label>
+                            <input type="text" name="Auteur" value="@Request.Form["Auteur"]" />
+                            @Html.ValidationMessage("Auteur")
+                        </p>
+                        <p>
+                            <label for="datum">Datum:</label>
+                            <input type="date" name="Datum" value="@Request.Form["Datum"]" />
+                            @Html.ValidationMessage("Datum")
+                        </p>
+                        <p>
+                            <label for="waardering">waardering:</label>
+                            <input type="number" name="Waardering" maxlength="5" value="@Request.Form["Waardering"]" />
+                            @Html.ValidationMessage("Waardering")
+                        </p>
+                        <p>
+                            <label for="Taal">Taal:</label>
+                            <input type="text" name="Taal" value="@Request.Form["Taal"]" />
+                            @Html.ValidationMessage("Taal")
+                        </p>
+                        <p>
+                            <label for="Uitgever">Uitgever:</label>
+                            <input type="text" name="Uitgever" value="@Request.Form["Uitgever"]" />
+                            @Html.ValidationMessage("Uitgever")
+                        </p>
+                        <p>
+                            <label for="Genre">Genre:</label>
+                            <input type="text" name="Genre" value="@Request.Form["Genre"]" />
+                            @Html.ValidationMessage("Genre")
+                        </p>
+                        <p>
+                            <label for="Foto">Foto:</label>
+                            <input type="file" name="Foto" value="@Request.Form["Foto"]" />
+                            @Html.ValidationMessage("Foto")
+                        </p>
 
-</head>
-<body >
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-5 col-lg-offset-3">
-                <div class="text-center">
-                    
-                        <!--Toevoegen boek-->
-                        <h2>Toevoegen van boeken</h2>
-                        @Html.ValidationSummary()
-                        <form method="post">
-                            <fieldset>
-                                <h3>Voeg een boek toe</h3>
-                                <br />
-                                <!-- Lijst met Toevoegende-->
-                                <p>
-                                    <label for="titel">Titel:</label>
-                                    <input type="text" name="titel" value="@Request.Form["titel"]" />
-                                    @Html.ValidationMessage("titel")
-                                </p>
-                                <p>
-                                    <label for="auteur">Auteur:</label>
-                                    <input type="text" name="Auteur" value="@Request.Form["Auteur"]" />
-                                    @Html.ValidationMessage("Auteur")
-                                </p>
-                                <p>
-                                    <label for="datum">Datum:</label>
-                                    <input type="date" name="Datum" value="@Request.Form["Datum"]" />
-                                    @Html.ValidationMessage("Datum")
-                                </p>
-                                <p>
-                                    <label for="waardering">waardering:</label>
-                                    <input type="number" name="Waardering" maxlength="5" value="@Request.Form["Waardering"]" />
-                                    @Html.ValidationMessage("Waardering")
-                                </p>
-                                <p>
-                                    <label for="Taal">Taal:</label>
-                                    <input type="text" name="Taal" value="@Request.Form["Taal"]" />
-                                    @Html.ValidationMessage("Taal")
-                                </p>
-                                <p>
-                                    <label for="Uitgever">Uitgever:</label>
-                                    <input type="text" name="Uitgever" value="@Request.Form["Uitgever"]" />
-                                    @Html.ValidationMessage("Uitgever")
-                                </p>
-                                <p>
-                                    <label for="Genre">Genre:</label>
-                                    <input type="text" name="Genre" value="@Request.Form["Genre"]" />
-                                    @Html.ValidationMessage("Genre")
-                                </p>
-                                                @*<p>
-                                    <label for="Foto">Foto:</label>
-                                    <input type="file" name="Foto" value="@Request.Form["Foto"]" />
-                                    @Html.ValidationMessage("Foto")
-                                </p>
+                        <p>
+                            <label for="Bestand">Bestand:</label>
+                            <input type="file" name="Bestand" value="@Request.Form["Bestand"]" />
+                            @Html.ValidationMessage("Bestand")
+                        </p>
+                        <br /><br />
+                        <p><input type="submit" name="buttonSubmit" value="Voeg Boek toe" /></p>
+                    </fieldset>
+                </form>
 
-                                <p>
-                                    <label for="Bestand">Bestand:</label>
-                                    <input type="file" name="Bestand" value="@Request.Form["Bestand"]" />
-                                    @Html.ValidationMessage("Bestand")
-                                </p>*@
-                                <br /><br />
-                                <p><input type="submit" name="buttonSubmit" value="Voeg Boek toe" /></p>
-                            </fieldset>
-                        </form>
-                    
-                </div>
             </div>
         </div>
     </div>
-
-    
-
-
-
-         <!-- JQuery Scripts-->
-    <script src="https://code.jquery.com/jquery-3.2.1.js"
-            integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
-            crossorigin="anonymous"></script>
-
-    </body>
-</html>
+</div>
