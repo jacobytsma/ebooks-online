@@ -32,7 +32,8 @@
                     @if (WebSecurity.IsAuthenticated)
                     {
                         <li><a class="email" href="~/Index.cshtml" title="Manage" style="color:white">@WebSecurity.CurrentUserName</a></li>
-                        <li id="logoutForm" action="~/LoginPage.cshtml" method="post" style="color:white">
+                        <li style="color:white">
+                            <form id="logoutForm" action="~/LoginPage.cshtml" method="post" style="display: none;"></form>
                             @AntiForgery.GetHtml()
                             <a href="javascript:document.getElementById('logoutForm').submit()" style="color:white">Log out</a>
                         </li>
