@@ -13,8 +13,7 @@ body {
 .table{
     border: 1px solid black;
     border-collapse: collapse;
-    padding: 15px;
-    
+    padding: 15px;   
 }
  
 .validation-summary-errors {
@@ -24,6 +23,7 @@ body {
     font-weight: bold;
     margin: 12px;
 }
+
 .head { background-color: #E8E8E8; font-weight: bold; color: #FFF; }
 .grid th, .grid td { border: 1px solid #C0C0C0; padding: 5px; border-collapse: collapse;}
 .alt { background-color: #E8E8E8; color: #000; }
@@ -32,6 +32,27 @@ body {
     cursor: pointer;
     background: #ffff99; 
 }
+
+#popup tr span {
+	display: none;
+}
+
+#popup tr:hover span {
+	display: block;
+	position: absolute;
+	top: 0px;
+	left: 905px;
+	width: ;
+	margin: 0px;
+	padding: 10px;
+	color: #335500;
+	font-weight: normal;
+	background: #e5e5e5;
+	text-align: left;
+	border: 1px solid #666;
+}
+
+
 
 
 
