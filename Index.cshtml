@@ -1,4 +1,8 @@
 @{
+    if (WebSecurity.IsAuthenticated)
+    {
+        Response.Redirect("~/Default-Page");
+    }
 }
 
 <!DOCTYPE html>

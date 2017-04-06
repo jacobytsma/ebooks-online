@@ -176,6 +176,7 @@ input[type="radio"]:checked + label span.radio::after {
 
 .table-special .table > tbody > tr > td {
     border-top: none;
+    vertical-align: middle;
 }
 
 .table-special tbody tr {
@@ -259,4 +260,31 @@ input[type="radio"]:checked + label span.radio::after {
     -ms-transform: skew(8deg) rotate(3deg);
     -o-transform: skew(8deg) rotate(3deg);
     transform: skew(8deg) rotate(3deg);
+}
+
+#popup tr span {
+	display: none;
+}
+
+#popup tr:hover span {
+	display: block;
+	position: absolute;
+	top: 0px;
+	left: 905px;
+	width: ;
+	margin: 0px;
+	padding: 10px;
+	color: #335500;
+	font-weight: normal;
+	background: #e5e5e5;
+	text-align: left;
+	border: 1px solid #666;
+}
+thead tr.head th:first-child {
+    visibility: hidden;
+    display: none;
+}
+.hidden-row{
+    visibility: hidden;
+    display: none;
 }

@@ -26,8 +26,6 @@
     HttpPostedFileBase foto;
     HttpPostedFileBase bestand;
 
-
-
     if (IsPost)
     {
         if (Validation.IsValid())
@@ -117,7 +115,6 @@
                         <p>
                             <label for="Bestand">Bestand:</label>
                             <input type="file" name="Bestand" value="@Request.Form["Bestand"]" accept="application/pdf" />
-
                         </p>
                         <br /><br />
                         <p><input type="submit" name="buttonSubmit" value="Voeg Boek toe" /></p>

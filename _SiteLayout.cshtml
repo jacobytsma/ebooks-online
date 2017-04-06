@@ -31,11 +31,12 @@
                     {
                         <li><a class="email" href="~/Index.cshtml" title="Manage" style="color:white">@WebSecurity.CurrentUserName</a></li>
                         <li style="color:white">
-                            <form id="logoutForm" action="~/LoginPage.cshtml" method="post" style="display: none;">
-                            <input type="text" name="__RequestVerificationToken" value="@Request.Cookies["__RequestVerificationToken"]"/>
-                            </form>
-                            @AntiForgery.GetHtml()
-                            <a href="javascript:document.getElementById('logoutForm').submit()" style="color:white">Log out</a>
+                            <a href="javascript:document.getElementById('logoutForm').submit()">
+                            <form id="logoutForm" action="~/Logout" method="post">
+                                    @AntiForgery.GetHtml()
+                                    <span style="color: white;">Log uit</span>
+                                </form>
+                                </a>
                         </li>
                     }
                     @*<li><a href="~/RegisterPage.cshtml" style="color:black"><span class="glyphicon glyphicon-user" style="color:black"></span> Sign Up</a></li>
