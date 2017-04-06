@@ -60,26 +60,21 @@
 @section script{
 <script>
     var request;
-    var canWork = true;
-
-    $(document).ajaxStop(function () {
-        canWork = true;
-    });
-
+    
     $("#book-table tbody tr").hover(function (event) {
-        if (canWork) {
-            canWork = false;
-            request = $.ajax({
-                type: 'GET',
-                url: "./GetBookCover?id=" + $(this).find(".hidden-row").text(),
-                data: {},
-                dataType: 'text',
-                success: function (data)
-                { $("#cover-image").attr('src', 'data:image/png;base64,' + data); canWork = true; },
-                error: function () { canWork = true; }
-            });
-        }
 
+        request = $.ajax({
+            type: 'GET',
+            url: "./GetBookCover?id=" + $(this).find(".hidden-row").text(),
+            data: {},
+            dataType: 'text',
+            async: false,
+            cache: false,
+            timeout: 1000,
+            success: function (data)
+            { $("#cover-image").attr('src', 'data:image/png;base64,' + data); },
+            error: function () { }
+        });
     });
 </script>
 }

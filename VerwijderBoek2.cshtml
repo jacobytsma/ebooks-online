@@ -44,6 +44,14 @@
         var db = Database.Open("e-Books");
         var deleteCommand = "DELETE FROM Boeken WHERE ID = @0";
         db.Execute(deleteCommand, boekid);
+        
+
+        var files = Directory.GetFiles(Server.MapPath("~/uploads/")).Where(x => Path.GetFileNameWithoutExtension(x) == boekid.ToString() || Path.GetFileNameWithoutExtension(x).EndsWith("-" + boekid.ToString()));
+        foreach (var file in files)
+        {
+            File.Delete(file);
+        }
+
         Response.Redirect("~/Default-Page");
     }
 }
@@ -63,37 +71,37 @@
 
                         <p>
                             <label for="titel">Titel:</label>
-                            <input type="text" name="titel" value="@titel" />
+                            <input type="text" name="titel" value="@titel" disabled />
                         </p>
 
                         <p>
                             <label for="auteur">Auteur:</label>
-                            <input type="text" name="auteur" value="@auteur" />
+                            <input type="text" name="auteur" value="@auteur" disabled />
                         </p>
 
                         <p>
                             <label for="datum">Datum:</label>
-                            <input type="text" name="datum" value="@datum" />
+                            <input type="text" name="datum" value="@datum" disabled/>
                         </p>
 
                         <p>
                             <label for="waardering">Waardering:</label>
-                            <input type="text" name="waardering" value="@waardering" />
+                            <input type="text" name="waardering" value="@waardering"disabled />
                         </p>
 
                         <p>
                             <label for="taal">Taal:</label>
-                            <input type="text" name="taal" value="@taal" />
+                            <input type="text" name="taal" value="@taal" disabled/>
                         </p>
 
                         <p>
                             <label for="uitgever">Uitgever:</label>
-                            <input type="text" name="uitgever" value="@uitgever" />
+                            <input type="text" name="uitgever" value="@uitgever" disabled/>
                         </p>
 
                         <p>
                             <label for="genre">Genre:</label>
-                            <input type="text" name="genre" value="@genre" />
+                            <input type="text" name="genre" value="@genre" disabled/>
                         </p>
 
 

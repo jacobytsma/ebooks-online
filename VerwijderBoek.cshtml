@@ -68,41 +68,38 @@
 @Html.ValidationSummary()
 <div class="container-fluid">
     <div class="row">
-        <div class="col-lg-6 col-lg-offset-4">
+        <div class="col-xs-12 col-md-6 col-md-offset-3">
             <h3>Boek verwijderen</h3>
-            <br />
-            <h4>Boek Informatie</h4>
 
             <!--wordt searchgenre opgehaald, zoekbalk en submitgenre button aangemaakt en blijft de ingevoerde text staan in het textvak-->
             <form method="get">
                 <div>
-                    <label for="searchGenre">Genre:</label>
-                    <input type="text" name="searchGenre" value="@Request.QueryString["searchGenre"]" />
+                    <label for="searchGenre">Genre:</label>&emsp;
+                    <input type="text" placeholder="Laat leeg om alle boeken te zien" name="searchGenre" value="@Request.QueryString["searchGenre"]" />
                     <input type="Submit" value="Search Genre" /><br />
-                        (Laat leeg om alle boeken te zien.)<br />
                 </div>
 
                 <!--wordt searchtitel opgehaald, zoekbalk en submittitel button aangemaakt en blijft de ingevoerde text staan in het textvak-->
                 <div>
-                    <label for="SearchTitle">Titel:</label>
-                    <input type="text" name="searchTitle" value="@Request.QueryString["searchTitle"]" />
+                    <label for="SearchTitle">Titel:</label>&emsp;&emsp;
+                    <input type="text" placeholder="Laat leeg om alle boeken te zien" name="searchTitle" value="@Request.QueryString["searchTitle"]" />
                     <input type="Submit" value="Search Title" /><br />
                 </div>
             </form>
+            <br/>
 
-            <div>
-                <!--worden de gegevens van de database in een tabel geplaatst, wordt de layout van de tabel aangemaakt en geeft hij voor elk item een id in de link -->
-                @grid.GetHtml(
-                                 tableStyle: "grid",
-                                 headerStyle: "head",
-                                 alternatingRowStyle: "alt",
-                            columns: grid.Columns(
-                            grid.Column(format:
-                @<a style="display:none;" type="hidden">@item.ID</a>),
-                grid.Column(format: @<a style="display:none;" type="hidden">@item.ID</a>),
-                grid.Column("Titel"),
-                grid.Column("Genre")))
-            </div>
+                    <div id="grid" class="table-special">
+                        @grid.GetHtml(
+                        tableStyle: "table",
+                        headerStyle: "head",
+                        columns: grid.Columns(
+                        grid.Column(style:"hidden-row", format: @<a style="display:none;" type="hidden" href="~/AanpassenBoek2?id=@item.ID">@item.ID</a>),
+                        grid.Column("Titel"),
+                        grid.Column("Genre")
+                          )
+                         )
+
+                    </div>
             <!--bij aanraking krijgt rij een kleur en je kunt de rij aanklikken en gaat hij naar een pagina met het boek dat verwijderd moet worden -->
             @section script{
                 <script>

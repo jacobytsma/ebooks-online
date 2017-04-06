@@ -61,31 +61,29 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-6 col-lg-offset-4">
+            <div class="col-xs-12 col-md-6 col-md-offset-3">
                 <h2>Boek aanpassen</h2>
-                <h4>Boek Informatie</h4>
                 <form method="get">
                     <div>
-                        <label for="searchGenre">Genre:</label>
-                        <input type="text" name="searchGenre" value="@Request.QueryString["searchGenre"]" />
+                        <label for="searchGenre">Genre:</label>&emsp;
+                        <input type="text" placeholder="Laat leeg om alle boeken te zien" name="searchGenre" value="@Request.QueryString["searchGenre"]" />
                         <input type="Submit" value="Search Genre" /><br />
-                        (Laat leeg om alle boeken te zien.)<br />
                     </div>
 
                     <div>
-                        <label for="SearchTitle">Titel:</label>
-                        <input type="text" name="searchTitle" value="@Request.QueryString["searchTitle"]" />
+                        <label for="SearchTitle">Titel:</label>&emsp;&emsp;
+                        <input type="text"  placeholder="Laat leeg om alle boeken te zien" name="searchTitle" value="@Request.QueryString["searchTitle"]" />
                         <input type="Submit" value="Search Title" /><br />
                     </div>
 
+                    <br />
 
-                    <div>
+                    <div id="grid" class="table-special">
                         @grid.GetHtml(
-                        tableStyle: "grid",
+                        tableStyle: "table",
                         headerStyle: "head",
-                        alternatingRowStyle: "alt",
                         columns: grid.Columns(
-                        grid.Column(format: @<a style="display:none;" type="hidden" href="~/AanpassenBoek2?id=@item.ID">@item.ID</a>),
+                        grid.Column(style:"hidden-row", format: @<a style="display:none;" type="hidden" href="~/AanpassenBoek2?id=@item.ID">@item.ID</a>),
                         grid.Column("Titel"),
                         grid.Column("Genre")
                           )
