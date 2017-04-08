@@ -4,9 +4,13 @@
         Response.Redirect("~/LoginPage?returnUrl="
             + Request.Url.LocalPath);
     }
-
     var id = Request["id"];
-    if (id != null && id.Any())
+    if (id == null || id == ""){
+        Response.Clear();
+        Response.StatusCode = 404;
+        Response.End();
+    }
+    else
     {
         var files = Directory.GetFiles(Server.MapPath("~/uploads/"));
         var file = files.FirstOrDefault(x => x.Contains("cover-" + id));
@@ -18,7 +22,10 @@
         }
         else
         {
-            Response.Write("File not found");
+            
+            Response.Clear();
+            Response.StatusCode = 404;
+            Response.End();
         }
     }
 }

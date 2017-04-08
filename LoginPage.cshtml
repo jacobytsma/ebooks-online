@@ -1,32 +1,23 @@
-@section Scripts {
-    <script src="~/Scripts/jquery.validate.min.js"></script>
-    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-}
 @{
-
     Page.Title = "Log in";
-
     // Initialize general page variables
     var email = "";
     var password = "";
     var rememberMe = false;
-
     var returnUrl = Request.QueryString["ReturnUrl"];
     if (returnUrl.IsEmpty())
     {
         // Some external login providers always require a return URL value
         returnUrl = Href("~/Default-Page");
     }
-
     // Setup validation
-    Validation.RequireField("email", "You must specify an email address.");
-    Validation.RequireField("password", "You must specify a password.");
-    Validation.Add("password",
-        Validator.StringLength(
-            maxLength: Int32.MaxValue,
-            minLength: 6,
-            errorMessage: "Password must be at least 6 characters"));
-
+    Validation.RequireField("email", "Voer een e-mail in.");
+    Validation.RequireField("password", "Voer een wachtwoord in.");
+    //Validation.Add("password",
+    //    Validator.StringLength(
+    //        maxLength: Int32.MaxValue,
+    //        minLength: 6,
+    //        errorMessage: "Wachtwoord moet 6 characters of langer zijn"));
     // If this is a POST request, validate and process data
     if (IsPost)
     {
@@ -43,13 +34,11 @@
             email = Request.Form["email"];
             password = Request.Form["password"];
             rememberMe = Request.Form["rememberMe"].AsBool();
-
             if (WebSecurity.UserExists(email) && WebSecurity.GetPasswordFailuresSinceLastSuccess(email) > 4 && WebSecurity.GetLastPasswordFailureDate(email).AddSeconds(60) > DateTime.UtcNow)
             {
                 Response.Redirect("~/Account/AccountLockedOut");
                 return;
             }
-
             // Attempt to log in using provided credentials
             if (WebSecurity.Login(email, password, rememberMe))
             {
@@ -58,81 +47,127 @@
             }
             else
             {
-                ModelState.AddFormError("The user name or password provided is incorrect.");
+                ModelState.AddFormError("Wachtwoord of e-mail is onjuist.");
             }
         }
     }
 }
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <link href="~/css/Logo.css" rel="stylesheet" type="text/css" />
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="~/css/Logo.css" />
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
-    <!--Responsive Mobiel-->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
-    <meta charset="utf-8" />
-</head>
-<body style="background-color:#BDE0FB">
-    <br />
-    <br />
-    <br />
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-6 col-lg-offset-3">
-                <form class="panel" method="post">
-                    <div class="text-center">
-                        <section id="loginForm" class="col s12">
-                            <br /><br />
-                            <img src="~/Images/child-reading-book_icon-icons.com_49293.png" height="150" width="150" />
-                            <br /><br />
-                            <h2>Account Gegevens invullen</h2>
-                            <br />
-                            <br /><br />
-                            @*<form method="post">*@
+    <head>
+        <link href="~/css/Logo.css" rel="stylesheet" type="text/css" />
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="~/css/main.css" />
+        <link rel="stylesheet" href="~/css/Logo.css" />
+        <style>
+            input[type=checkbox] {
+                visibility: hidden;
+            }
+             .checkboxFive {
+                margin-top:  5px;
+                position: relative;
+                display: inline-block;
+                width: 25px;
+            }
+            .checkboxFive label {
+                cursor: pointer;
+                position: absolute;
+                width: 25px;
+                height: 25px;
+                top: 0;
+                left: 0;
+                background: #eee;
+                border:1px solid #ddd;
+            }
+            .checkboxFive label:after {
+                opacity: 0.2;
+                content: '';
+                position: absolute;
+                width: 9px;
+                height: 5px;
+                background: transparent;
+                top: 8px;
+                left: 7px;
+                border: 2px solid #333;
+                border-top: none;
+                border-right: none;
+            
+                transform: rotate(-45deg);
+            }
+            .checkboxFive label:hover::after {
+                opacity: 0.5;
+            }
+            
+            .checkboxFive input[type=checkbox]:checked + label:after {
+                opacity: 1;
+            }
+            
+            .remember-me label {
+                display:  inline!important;
+                margin:  0!important;
+                float:  none!important;
+            }
+            .remember-me label:hover{
+                cursor: pointer;
+            }
+        </style>
+        <!-- Optional theme -->
+        <!-- Latest compiled and minified JavaScript -->
+        <!--Responsive Mobiel-->
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta charset="utf-8" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-xs-offset-0 col-md-6 col-md-offset-3">
+                    <h1 class="title" data-shadow="E-Books Online">Login</h1>
+                    <div class="panel text-center">
+                        <a href="Index"><img alt="logo" src="Images/logo.png" height="150" width="150" style="margin-top: 40px;" /></a>
+                        <form method="post" class="form-style-7" id="loginForm">
                             @AntiForgery.GetHtml()
-                            @* If one or more validation errors exist, show an error *@
-                            @Html.ValidationSummary("Log in was unsuccessful. Please correct the errors and try again.", excludeFieldErrors: true, htmlAttributes: null)
-                            <fieldset>
-                                <ol style="list-style:none">
-                                    <li class="email">
-                                        <label for="email" @if (!ModelState.IsValidField("email")) { <text> class="error-label" </text>        }>Email address</label>
-                                        <input type="text" id="email" name="email" value="@email" @Validation.For("email") />
-                                        @* Write any user name validation errors to the page *@
-                                        @Html.ValidationMessage("email")
-                                    </li>
-                                    <li class="password">
-                                        <label for="password" @if (!ModelState.IsValidField("password")) { <text> class="error-label" </text>        }>Password</label>
-                                        <input type="password" id="password" name="password" @Validation.For("password") />
-                                        @* Write any password validation errors to the page *@
-                                        @Html.ValidationMessage("password")
-                                    </li>
-                                    <li class="remember-me">
+                            @Html.ValidationSummary()
+                            <ul style="width: 60%; margin: 0 auto;">
+                                <li class="email">
+                                    <label for="email" @if (!ModelState.IsValidField("email")) { <text> class="error-label" </text>    }>E-Mail</label>
+                                    <input type="text" id="email" name="email" value="@email" @Validation.For("email") />
+                                </li>
+                                <li class="password">
+                                    <label for="password" @if (!ModelState.IsValidField("password")) { <text> class="error-label" </text>    }>Wachtwoord</label>
+                                    <input type="password" id="password" name="password" @Validation.For("password") />
+                                </li>
+                                <li class="remember-me" style="border: none;">
+                                    
+                                    <div class="checkboxFive">
                                         <input type="checkbox" id="rememberMe" name="rememberMe" value="true" checked="@rememberMe" />
-                                        <label class="checkbox" for="rememberMe">Remember me?</label>
-                                    </li>
-                                </ol>
-                                <input type="submit" value="Log in" />
-                            </fieldset>
-                            @*</form>*@
-                            <br /><br />
-                            <p>
-                                <a href="~/RegisterPage.cshtml">Don't have a Account?</a>
-                            </p>
-                        </section>
+                                        <label for="rememberMe"></label>
+                                    </div>
+                                    <label for="rememberMe">Onthoud mij</label>
+                                </li>
+                                <li style="border: none;">
+                                    <input type="submit" value="Log in" />
+                                </li>
+                            </ul>
+                        </form>
                     </div>
-                </form>
+                    <p>
+                    <a href="Index">Terug</a></p>
+                </div>
             </div>
         </div>
-    </div>
-</body>
+        <script src="js/jquery.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('.validation-summary-errors ul').attr("style", "list-style:none;");
+                $('.validation-summary-errors li').addClass("isa_warning");
+                $('.validation-summary-errors').removeClass().attr("style", "max-width:500px;margin: 0 auto;");
+            });
+        </script>
+        <script src="~/Scripts/jquery.validate.min.js"></script>
+        <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    </body>
 </html>

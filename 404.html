@@ -1,11 +1,598 @@
 <!DOCTYPE html>
-
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title></title>
+        <style>
+                        .drone {
+              -webkit-animation: drone 1s ease-in-out infinite alternate;
+                      animation: drone 1s ease-in-out infinite alternate;
+              top: 55px;
+              left: 209px;
+              position: absolute;
+              z-index: 1;
+            }
+            .drone__head {
+              background-color: #BDE9EE;
+              border-radius: 4.4px 4.4px 0 0;
+              box-shadow: inset 5.5px 0 #B0DBE2;
+              height: 16.5px;
+              margin: 2.75px auto 0 auto;
+              position: relative;
+              width: 22px;
+            }
+            .drone__head:before {
+              background-color: #D0F1F6;
+              border-radius: 5.5px 5.5px 0 0;
+              content: "";
+              display: block;
+              height: 2.75px;
+              left: 0;
+              margin: 0 auto;
+              position: absolute;
+              right: 0;
+              top: -2.75px;
+              width: 8.25px;
+            }
+            .drone__body {
+              background-color: #D0F1F6;
+              border-radius: 4.4px;
+              box-shadow: inset 11px 0 #BDE9EE;
+              height: 22px;
+              position: relative;
+              width: 33px;
+            }
+            .drone__eye {
+              background-color: #1C273C;
+              border-radius: 13.2px;
+              box-shadow: inset 1.65px 0 #516E74, inset 4.4px -1.1px #243A4B, inset 0.55px 0 0 3.85px #2B4553;
+              height: 13.2px;
+              position: absolute;
+              right: 4.4px;
+              top: 3.85px;
+              width: 13.2px;
+            }
+            .drone__eye:before {
+              background-color: #fff;
+              border-radius: 1.65px;
+              bottom: 3.85px;
+              content: "";
+              display: block;
+              height: 1.65px;
+              left: 3.85px;
+              position: absolute;
+              width: 1.65px;
+            }
+            
+            .blade {
+              position: absolute;
+            }
+            .blade:before, .blade:after {
+              content: "";
+              display: block;
+            }
+            .blade__part-one {
+              -webkit-animation: rotate 0.1s linear infinite alternate;
+                      animation: rotate 0.1s linear infinite alternate;
+            }
+            .blade-one {
+              bottom: 1.65px;
+              left: -14.85px;
+              z-index: 1;
+            }
+            .blade-one:before, .blade-one:after {
+              background-color: #91D1DC;
+            }
+            .blade-one:before {
+              border-radius: 6.6px 6.6px 0 0;
+              height: 11px;
+              width: 6.6px;
+            }
+            .blade-one:after {
+              border-radius: 0 6.6px 6.6px 6.6px;
+              height: 6.6px;
+              width: 24.75px;
+            }
+            .blade-one .blade__part-one {
+              background-color: #D0F1F6;
+              border-radius: 3.3px;
+              height: 3.3px;
+              position: absolute;
+              top: 2.2px;
+              left: -10.45px;
+              width: 27.5px;
+            }
+            .blade-two {
+              bottom: 2.75px;
+              left: -34.1px;
+              z-index: -1;
+            }
+            .blade-two:before, .blade-two:after {
+              background-color: #87BFC8;
+            }
+            .blade-two:before {
+              border-radius: 6.6px 6.6px 0 0;
+              height: 11px;
+              width: 5.5px;
+            }
+            .blade-two:after {
+              border-radius: 0 6.6px 6.6px 6.6px;
+              height: 5.5px;
+              width: 41.25px;
+            }
+            .blade-two .blade__part-one {
+              background-color: #D0F1F6;
+              border-radius: 3.3px;
+              height: 3.3px;
+              position: absolute;
+              top: 2.2px;
+              left: -10.45px;
+              width: 27.5px;
+            }
+            .blade-three {
+              bottom: 1.65px;
+              right: -14.85px;
+              -webkit-transform: scaleX(-1);
+                      transform: scaleX(-1);
+              z-index: -2;
+            }
+            .blade-three:before, .blade-three:after {
+              background-color: #6AA7B0;
+            }
+            .blade-three:before {
+              border-radius: 6.6px 6.6px 0 0;
+              height: 11px;
+              width: 6.6px;
+            }
+            .blade-three:after {
+              border-radius: 0 6.6px 6.6px 6.6px;
+              height: 6.6px;
+              width: 24.75px;
+            }
+            .blade-three .blade__part-one {
+              background-color: #D0F1F6;
+              border-radius: 3.3px;
+              height: 3.3px;
+              position: absolute;
+              top: 2.2px;
+              left: -10.45px;
+              width: 27.5px;
+            }
+            .blade-four {
+              bottom: 2.75px;
+              right: -34.1px;
+              -webkit-transform: scaleX(-1);
+                      transform: scaleX(-1);
+              z-index: -1;
+            }
+            .blade-four:before, .blade-four:after {
+              background-color: #87BFC8;
+            }
+            .blade-four:before {
+              border-radius: 6.6px 6.6px 0 0;
+              height: 11px;
+              width: 5.5px;
+            }
+            .blade-four:after {
+              border-radius: 0 6.6px 6.6px 6.6px;
+              height: 5.5px;
+              width: 41.25px;
+            }
+            .blade-four .blade__part-one {
+              background-color: #D0F1F6;
+              border-radius: 3.3px;
+              height: 3.3px;
+              position: absolute;
+              top: 2.2px;
+              left: -10.45px;
+              width: 27.5px;
+            }
+            
+            .foots {
+              position: relative;
+            }
+            .foots__one {
+              background-color: #B0DBE2;
+              border-radius: 3.3px 3.3px 0 0;
+              height: 3.3px;
+              left: 50%;
+              -webkit-transform: translateX(-50%);
+                      transform: translateX(-50%);
+              width: 49.5px;
+            }
+            .foots__one:before, .foots__one:after {
+              background-color: #B0DBE2;
+              border-radius: 0 0 3.3px 3.3px;
+              height: 5.5px;
+              position: absolute;
+              top: 3.3px;
+              width: 3.3px;
+            }
+            .foots__one:before {
+              left: 0;
+            }
+            .foots__one:after {
+              right: 0;
+            }
+            .foots__two, .foots__three {
+              border-radius: 3.3px 3.3px 3.3px 0;
+              height: 3.3px;
+              width: 13.75px;
+            }
+            .foots__two:before, .foots__three:before {
+              border-radius: 0 0 3.3px 3.3px;
+              height: 5.5px;
+              position: absolute;
+              top: 3.3px;
+              width: 3.3px;
+            }
+            .foots__two {
+              background-color: #D0F1F6;
+              left: 2.75px;
+            }
+            .foots__two:before {
+              background-color: #D0F1F6;
+              left: 0;
+            }
+            .foots__three {
+              background-color: #89BFC8;
+              left: 11px;
+              z-index: -1;
+            }
+            .foots__three:before {
+              background-color: #89BFC8;
+              right: 0;
+            }
+            
+            .foot {
+              position: absolute;
+              top: 0;
+            }
+            .foot:before, .foot:after {
+              content: "";
+              display: block;
+            }
+            
+            .ground {
+              background-color: #FEE09E;
+              bottom: 0;
+              height: 74.25px;
+              position: absolute;
+              width: 100%;
+            }
+            .ground__item {
+              background-color: #FEE09E;
+              border-radius: 220px;
+              opacity: 0.8;
+              position: absolute;
+              -webkit-transform-origin: left center;
+                      transform-origin: left center;
+              margin: 0 0;
+            }
+            .ground__item--1 {
+              height: 220px;
+              width: 220px;
+            }
+            .ground__item--1 {
+              -webkit-animation: ground 0.3s linear infinite;
+                      animation: ground 0.3s linear infinite;
+              height: 176px;
+              width: 176px;
+              left: 0px;
+            }
+            .ground__item--2 {
+              -webkit-animation: ground 0.3s linear infinite;
+                      animation: ground 0.3s linear infinite;
+              height: 123.2px;
+              width: 123.2px;
+              left: 66.73333px;
+            }
+            .ground__item--3 {
+              -webkit-animation: ground 0.3s linear infinite;
+                      animation: ground 0.3s linear infinite;
+              height: 86.24px;
+              width: 86.24px;
+              left: 114.07px;
+            }
+            .ground__item--4 {
+              -webkit-animation: ground 0.3s linear infinite;
+                      animation: ground 0.3s linear infinite;
+              height: 60.368px;
+              width: 60.368px;
+              left: 147.752px;
+            }
+            .ground__item--5 {
+              -webkit-animation: ground 0.3s linear infinite;
+                      animation: ground 0.3s linear infinite;
+              height: 42.2576px;
+              width: 42.2576px;
+              left: 171.82183px;
+            }
+            .ground__item--6 {
+              -webkit-animation: ground 0.3s linear infinite;
+                      animation: ground 0.3s linear infinite;
+              height: 29.58032px;
+              width: 29.58032px;
+              left: 189.12542px;
+            }
+            .ground__item--7 {
+              -webkit-animation: ground 0.3s linear infinite;
+                      animation: ground 0.3s linear infinite;
+              height: 20.70622px;
+              width: 20.70622px;
+              left: 201.66622px;
+            }
+            .ground__item--8 {
+              -webkit-animation: ground 0.3s linear infinite;
+                      animation: ground 0.3s linear infinite;
+              height: 14.49436px;
+              width: 14.49436px;
+              left: 210.85459px;
+            }
+            .ground__item--9 {
+              -webkit-animation: ground 0.3s linear infinite;
+                      animation: ground 0.3s linear infinite;
+              height: 10.14605px;
+              width: 10.14605px;
+              left: 217.68331px;
+            }
+            .ground__item--10 {
+              -webkit-animation: ground 0.3s linear infinite;
+                      animation: ground 0.3s linear infinite;
+              height: 7.10223px;
+              width: 7.10223px;
+              left: 222.85122px;
+            }
+            .ground__item--11 {
+              -webkit-animation: ground 0.3s linear infinite;
+                      animation: ground 0.3s linear infinite;
+              height: 4.97156px;
+              width: 4.97156px;
+              left: 226.85022px;
+            }
+            .ground__item--12 {
+              -webkit-animation: ground 0.3s linear infinite;
+                      animation: ground 0.3s linear infinite;
+              height: 3.4801px;
+              width: 3.4801px;
+              left: 230.02654px;
+            }
+            .ground__item--13 {
+              -webkit-animation: ground 0.3s linear infinite;
+                      animation: ground 0.3s linear infinite;
+              height: 2.43607px;
+              width: 2.43607px;
+              left: 232.62388px;
+            }
+            .ground__item--14 {
+              -webkit-animation: ground 0.3s linear infinite;
+                      animation: ground 0.3s linear infinite;
+              height: 1.70525px;
+              width: 1.70525px;
+              left: 234.81377px;
+            }
+            .ground__item--15 {
+              -webkit-animation: ground 0.3s linear infinite;
+                      animation: ground 0.3s linear infinite;
+              height: 1.19367px;
+              width: 1.19367px;
+              left: 236.7169px;
+            }
+            .ground__item--16 {
+              -webkit-animation: ground 0.3s linear infinite;
+                      animation: ground 0.3s linear infinite;
+              height: 0.83557px;
+              width: 0.83557px;
+              left: 238.41825px;
+            }
+            
+            @-webkit-keyframes drone {
+              from {
+                -webkit-transform: translate(0, 0) rotate(5deg);
+                        transform: translate(0, 0) rotate(5deg);
+              }
+              to {
+                -webkit-transform: translate(50%, 100%) rotate(5deg);
+                        transform: translate(50%, 100%) rotate(5deg);
+              }
+            }
+            
+            @keyframes drone {
+              from {
+                -webkit-transform: translate(0, 0) rotate(5deg);
+                        transform: translate(0, 0) rotate(5deg);
+              }
+              to {
+                -webkit-transform: translate(50%, 100%) rotate(5deg);
+                        transform: translate(50%, 100%) rotate(5deg);
+              }
+            }
+            @-webkit-keyframes ground {
+              from {
+                -webkit-transform: translate(-50%, -30%) scale(1);
+                        transform: translate(-50%, -30%) scale(1);
+              }
+              to {
+                -webkit-transform: translate(-120%, -30%) scale(1.29);
+                        transform: translate(-120%, -30%) scale(1.29);
+              }
+            }
+            @keyframes ground {
+              from {
+                -webkit-transform: translate(-50%, -30%) scale(1);
+                        transform: translate(-50%, -30%) scale(1);
+              }
+              to {
+                -webkit-transform: translate(-120%, -30%) scale(1.29);
+                        transform: translate(-120%, -30%) scale(1.29);
+              }
+            }
+            @-webkit-keyframes rotate {
+              from {
+                -webkit-transform: scaleX(1);
+                        transform: scaleX(1);
+              }
+              to {
+                -webkit-transform: scaleX(0);
+                        transform: scaleX(0);
+              }
+            }
+            @keyframes rotate {
+              from {
+                -webkit-transform: scaleX(1);
+                        transform: scaleX(1);
+              }
+              to {
+                -webkit-transform: scaleX(0);
+                        transform: scaleX(0);
+              }
+            }
+            a {
+              font-weight: 600;
+              color: #2196f3;
+            }
+            a:hover {
+              color: #e66;
+            }
+            
+            html,
+            body {
+              font-family: "Open Sans";
+            }
+            
+            body {
+              background-color: #f4f4f4;
+            }
+            
+            .title {
+              color: #999;
+              text-align: center;
+            }
+            .title h1 {
+              font-size: 2em;
+              margin: 100px 0 10px 0;
+            }
+            .title a {
+              vertical-align: middle;
+              text-decoration: none;
+            }
+            .title a:hover img {
+              -webkit-animation: link 0.5s;
+                      animation: link 0.5s;
+            }
+            .title a img {
+              width: 18px;
+            }
+            
+            .credits {
+              font-size: 0.6em;
+              text-align: center;
+            }
+            
+            .love {
+              background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/42764/heart-smil.svg);
+              display: inline-block;
+              height: 16px;
+              vertical-align: middle;
+              width: 16px;
+            }
+            
+            .container {
+              background-color: white;
+              border-radius: 4px;
+              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+              height: 300px;
+              margin: 40px auto 50px auto;
+              position: relative;
+              width: 400px;
+            }
+            
+            .artboard {
+              height: 100%;
+              overflow: hidden;
+              position: relative;
+              width: 100%;
+            }
+            
+            @-webkit-keyframes link {
+              25% {
+                -webkit-transform: rotate(10deg);
+                        transform: rotate(10deg);
+              }
+              50% {
+                -webkit-transform: rotate(-10deg);
+                        transform: rotate(-10deg);
+              }
+            }
+            
+            @keyframes link {
+              25% {
+                -webkit-transform: rotate(10deg);
+                        transform: rotate(10deg);
+              }
+              50% {
+                -webkit-transform: rotate(-10deg);
+                        transform: rotate(-10deg);
+              }
+            }
+            
+        </style>
+        <title>404 - Niet gevonden</title>
     </head>
     <body>
-        <h1>U have reached the 404 destination!</h1>
+        <div class="title">
+            <h1>404 - Niet gevonden</h1>
+            <span>Onze drone is nog steeds op zoek...</span>
+            <br>
+            <p><a href="/Default-Page">Terug naar site</a></p>
+        </div>
+        <div class="container">
+            <div class="artboard">
+                <div class="drone">
+                    <div class="drone__head">
+                        <div class="blade blade-one">
+                            <div class="blade__part-one"></div>
+                        </div>
+                        <div class="blade blade-two">
+                            <div class="blade__part-one"></div>
+                        </div>
+                        <div class="blade blade-three">
+                            <div class="blade__part-one"></div>
+                        </div>
+                        <div class="blade blade-four">
+                            <div class="blade__part-one"></div>
+                        </div>
+                    </div>
+                    <div class="drone__body">
+                        <div class="drone__eye"></div>
+                    </div>
+                    <div class="drone__foots foots">
+                        <div class="foots__one foot"></div>
+                        <div class="foots__two foot"></div>
+                        <div class="foots__three foot"></div>
+                    </div>
+                </div>
+                <div class="ground">
+                    <div class="ground__items">
+                        <div class="ground__item ground__item--1"></div>
+                        <div class="ground__item ground__item--2"></div>
+                        <div class="ground__item ground__item--3"></div>
+                        <div class="ground__item ground__item--4"></div>
+                        <div class="ground__item ground__item--5"></div>
+                        <div class="ground__item ground__item--6"></div>
+                        <div class="ground__item ground__item--7"></div>
+                        <div class="ground__item ground__item--8"></div>
+                        <div class="ground__item ground__item--9"></div>
+                        <div class="ground__item ground__item--10"></div>
+                        <div class="ground__item ground__item--11"></div>
+                        <div class="ground__item ground__item--12"></div>
+                        <div class="ground__item ground__item--13"></div>
+                        <div class="ground__item ground__item--14"></div>
+                        <div class="ground__item ground__item--15"></div>
+                        <div class="ground__item ground__item--16"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="credits">Created with <span class="love"></span> in Bootstrap by: Dani&euml;l Zondervan, Joop Westra and Yacob Ytsma</div>
     </body>
 </html>

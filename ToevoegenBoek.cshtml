@@ -1,3 +1,13 @@
+@section style{
+    <style>
+        :not(output):-moz-ui-invalid {
+            box-shadow: none;
+        } 
+                input:invalid {
+            box-shadow: none;
+        }
+    </style>
+}
 @{
     if (!WebSecurity.IsAuthenticated)
     {
@@ -5,16 +15,41 @@
             + Request.Url.LocalPath);
     }
     Layout = "~/_SiteLayout.cshtml";
+     Page.Title = "E-Book Toevoegen";
+    Validation.RequireField("titel", "Wat is de titel van het boek?");
+    Validation.RequireField("auteur", "Wie is de auteur?");
+    Validation.RequireField("datum", "Wanneer is het boek uitgegeven?");
+    Validation.RequireField("star", "Wat is de waardering van het boek?");
+    Validation.RequireField("taal", "Welk taal is het boek?");
+    Validation.RequireField("uitgever", "Wie is de uitgever?");
+    Validation.RequireField("genre", "Welk genre is het boek?");
 
-    Validation.RequireField("Titel", "Wat is de titel van het boek?");
-    Validation.RequireField("Auteur", "Wie is de auteur?");
-    Validation.RequireField("Datum", "Wanneer is het boek uitgegeven?");
-    Validation.RequireField("Waardering", "Waardering van het boek is?");
-    Validation.RequireField("Taal", "Welk taal is het boek?");
-    Validation.RequireField("Uitgever", "Wie is de uitgever?");
-    Validation.RequireField("Genre", "Welk genre is het boek?");
-    //Validation.RequireField("Foto", "Voeg een foto van de cover toe");
-    //Validation.RequireField("Bestand", "Upload het bestandstype .PDF");
+    var starContent = Request["star"];
+    bool has1star = false;
+    bool has2star = false;
+    bool has3star = false;
+    bool has4star = false;
+    bool has5star = false;
+    switch (starContent)
+    {
+        default:
+            break;
+        case "1":
+            has1star = true;
+            break;
+        case "2":
+            has2star = true;
+            break;
+        case "3":
+            has3star = true;
+            break;
+        case "4":
+            has4star = true;
+            break;
+        case "5":
+            has5star = true;
+            break;
+    }
 
     string titel = "Titel";
     string auteur = "Auteur";
@@ -25,26 +60,32 @@
     string genre = "Genre";
     HttpPostedFileBase foto;
     HttpPostedFileBase bestand;
-
     if (IsPost)
     {
-        if (Validation.IsValid())
+        if (Request.Files[0].ContentLength == 0
+        || !Request.Files[0].ContentType.StartsWith("image/")){
+            ModelState.AddError("cover", "Voeg een foto van de cover toe");
+        }
+        if (Request.Files[1].ContentLength == 0
+        || Request.Files[1].ContentType != "application/pdf"){
+            ModelState.AddError("bestand", "Upload het bestandstype .PDF");
+        }
+
+        if (Validation.IsValid() && ModelState.IsValid)
         {
-            titel = Request["Titel"];
-            auteur = Request["Auteur"];
-            datum = Request["Datum"];
-            waard = Convert.ToInt32(Request.Form["Waardering"]);
-            taal = Request["Taal"];
-            uitgever = Request["Uitgever"];
-            genre = Request["Genre"];
+            titel = Request.Form["titel"];
+            auteur = Request.Form["auteur"];
+            datum = Request.Form["datum"];
+            waard = Convert.ToInt32(Request.Form["star"]);
+            taal = Request.Form["taal"];
+            uitgever = Request.Form["uitgever"];
+            genre = Request.Form["genre"];
             foto = Request.Files[0];
             bestand = Request.Files[1];
-
             var db = Database.Open("e-Books");
             var insertCommand =
                 "INSERT INTO boeken (Titel, Auteur, Datum, Waardering, Taal, Uitgever, Genre) Values(@0, @1, @2, @3, @4, @5, @6)";
             db.Execute(insertCommand, titel, auteur, datum, waard, taal, uitgever, genre);
-
             var lastInsertId = db.GetLastInsertId();
             var servPath = Server.MapPath("~/uploads/");
             var coverPath = servPath + "cover-" + lastInsertId + Path.GetExtension(foto.FileName);         
@@ -52,75 +93,169 @@
             foto.SaveAs(coverPath);
             bestand.SaveAs(filePath);
 
-
-            Response.Redirect("~/Default-Page.cshtml");
+            Response.Redirect("~/ToevoegenBoek.cshtml?success=true");
         }
     }
-
 }
+@section script{
+    <script>
+                //auto expand textarea
+                function adjust_textarea(h) 
+                {
+                    h.style.height = "20px";
+                    h.style.height = (h.scrollHeight)+"px";
+                }
+        
+                var $_GET = {};
+        
+                document.location.search.replace(/\??(?:([^=]+)=([^&]*)&?)/g, function () {
+                    function decode(s) {
+                        return decodeURIComponent(s.split("+").join(" "));
+                    }
+        
+                    $_GET[decode(arguments[1])] = decode(arguments[2]);
+                });
+                $( document ).ready(function() {
+                if ($_GET["success"] != null
+                    || $_GET["fail"] != null)
+                {
+                        var url = window.location.href;
+                        //get url after/  
+                        var value = url.substring(url.lastIndexOf('/') + 1);
+                        //get the part after before ?
+                        value  = value.split("?")[0];   
+                        //reset parameter
+                        window.history.pushState("string", "", "/"+value );
+                }
+                if ($_GET["success"] != null){
+                    $("#book_success").attr("style", "display: block;visibility: visible;max-width: 500px; margin: 0 auto;")
+                }
+                else if ($_GET["fail"] != null)
+                {
+                    $("#book_fail").attr("style", "display: block;visibility: visible;max-width: 500px; margin: 0 auto;")
+                }
+        });
+    </script>
+    <script>
+        'use strict';
+        
+        ;( function ( document, window, index )
+        {
+            var inputs = document.querySelectorAll( '.inputfile' );
+            Array.prototype.forEach.call( inputs, function( input )
+            {
+                var label	 = input.nextElementSibling,
+                    labelVal = label.innerHTML;
+                input.addEventListener( 'change', function( e )
+                {
+                    var fileName = '';
+                    if( this.files && this.files.length > 1 )
+                        fileName = ( this.getAttribute( 'data-multiple-caption' ) || '' ).replace( '{count}', this.files.length );
+                    else
+                        fileName = e.target.value.split( '\\' ).pop();
+                    if( fileName )
+                        label.querySelector( 'span' ).innerHTML = fileName;
+                    else
+                        label.innerHTML = labelVal;
+                });
+                // Firefox bug fix
+                input.addEventListener( 'focus', function(){ input.classList.add( 'has-focus' ); });
+                input.addEventListener( 'blur', function(){ input.classList.remove( 'has-focus' ); });
+            });
+        }( document, window, 0 ));
+    </script>
+    <script>
+        !function(a){"function"==typeof define&&define.amd?define(["jquery"],a):a("object"==typeof exports?require("jquery"):jQuery)}(function(a){var b,c=navigator.userAgent,d=/iphone/i.test(c),e=/chrome/i.test(c),f=/android/i.test(c);a.mask={definitions:{9:"[0-9]",a:"[A-Za-z]","*":"[A-Za-z0-9]"},autoclear:!0,dataName:"rawMaskFn",placeholder:"_"},a.fn.extend({caret:function(a,b){var c;if(0!==this.length&&!this.is(":hidden"))return"number"==typeof a?(b="number"==typeof b?b:a,this.each(function(){this.setSelectionRange?this.setSelectionRange(a,b):this.createTextRange&&(c=this.createTextRange(),c.collapse(!0),c.moveEnd("character",b),c.moveStart("character",a),c.select())})):(this[0].setSelectionRange?(a=this[0].selectionStart,b=this[0].selectionEnd):document.selection&&document.selection.createRange&&(c=document.selection.createRange(),a=0-c.duplicate().moveStart("character",-1e5),b=a+c.text.length),{begin:a,end:b})},unmask:function(){return this.trigger("unmask")},mask:function(c,g){var h,i,j,k,l,m,n,o;if(!c&&this.length>0){h=a(this[0]);var p=h.data(a.mask.dataName);return p?p():void 0}return g=a.extend({autoclear:a.mask.autoclear,placeholder:a.mask.placeholder,completed:null},g),i=a.mask.definitions,j=[],k=n=c.length,l=null,a.each(c.split(""),function(a,b){"?"==b?(n--,k=a):i[b]?(j.push(new RegExp(i[b])),null===l&&(l=j.length-1),k>a&&(m=j.length-1)):j.push(null)}),this.trigger("unmask").each(function(){function h(){if(g.completed){for(var a=l;m>=a;a++)if(j[a]&&C[a]===p(a))return;g.completed.call(B)}}function p(a){return g.placeholder.charAt(a<g.placeholder.length?a:0)}function q(a){for(;++a<n&&!j[a];);return a}function r(a){for(;--a>=0&&!j[a];);return a}function s(a,b){var c,d;if(!(0>a)){for(c=a,d=q(b);n>c;c++)if(j[c]){if(!(n>d&&j[c].test(C[d])))break;C[c]=C[d],C[d]=p(d),d=q(d)}z(),B.caret(Math.max(l,a))}}function t(a){var b,c,d,e;for(b=a,c=p(a);n>b;b++)if(j[b]){if(d=q(b),e=C[b],C[b]=c,!(n>d&&j[d].test(e)))break;c=e}}function u(){var a=B.val(),b=B.caret();if(o&&o.length&&o.length>a.length){for(A(!0);b.begin>0&&!j[b.begin-1];)b.begin--;if(0===b.begin)for(;b.begin<l&&!j[b.begin];)b.begin++;B.caret(b.begin,b.begin)}else{for(A(!0);b.begin<n&&!j[b.begin];)b.begin++;B.caret(b.begin,b.begin)}h()}function v(){A(),B.val()!=E&&B.change()}function w(a){if(!B.prop("readonly")){var b,c,e,f=a.which||a.keyCode;o=B.val(),8===f||46===f||d&&127===f?(b=B.caret(),c=b.begin,e=b.end,e-c===0&&(c=46!==f?r(c):e=q(c-1),e=46===f?q(e):e),y(c,e),s(c,e-1),a.preventDefault()):13===f?v.call(this,a):27===f&&(B.val(E),B.caret(0,A()),a.preventDefault())}}function x(b){if(!B.prop("readonly")){var c,d,e,g=b.which||b.keyCode,i=B.caret();if(!(b.ctrlKey||b.altKey||b.metaKey||32>g)&&g&&13!==g){if(i.end-i.begin!==0&&(y(i.begin,i.end),s(i.begin,i.end-1)),c=q(i.begin-1),n>c&&(d=String.fromCharCode(g),j[c].test(d))){if(t(c),C[c]=d,z(),e=q(c),f){var k=function(){a.proxy(a.fn.caret,B,e)()};setTimeout(k,0)}else B.caret(e);i.begin<=m&&h()}b.preventDefault()}}}function y(a,b){var c;for(c=a;b>c&&n>c;c++)j[c]&&(C[c]=p(c))}function z(){B.val(C.join(""))}function A(a){var b,c,d,e=B.val(),f=-1;for(b=0,d=0;n>b;b++)if(j[b]){for(C[b]=p(b);d++<e.length;)if(c=e.charAt(d-1),j[b].test(c)){C[b]=c,f=b;break}if(d>e.length){y(b+1,n);break}}else C[b]===e.charAt(d)&&d++,k>b&&(f=b);return a?z():k>f+1?g.autoclear||C.join("")===D?(B.val()&&B.val(""),y(0,n)):z():(z(),B.val(B.val().substring(0,f+1))),k?b:l}var B=a(this),C=a.map(c.split(""),function(a,b){return"?"!=a?i[a]?p(b):a:void 0}),D=C.join(""),E=B.val();B.data(a.mask.dataName,function(){return a.map(C,function(a,b){return j[b]&&a!=p(b)?a:null}).join("")}),B.one("unmask",function(){B.off(".mask").removeData(a.mask.dataName)}).on("focus.mask",function(){if(!B.prop("readonly")){clearTimeout(b);var a;E=B.val(),a=A(),b=setTimeout(function(){B.get(0)===document.activeElement&&(z(),a==c.replace("?","").length?B.caret(0,a):B.caret(a))},10)}}).on("blur.mask",v).on("keydown.mask",w).on("keypress.mask",x).on("input.mask paste.mask",function(){B.prop("readonly")||setTimeout(function(){var a=A(!0);B.caret(a),h()},0)}),e&&f&&B.off("input.mask").on("input.mask",u),A()})}})});
+        jQuery(function($){
+           $("#datum").mask("99/99/9999",{placeholder:"dd/mm/yyyy"});
+        });
+    </script>
+}
+
+
 <div class="container-fluid">
     <div class="row">
-        <div class="col-lg-5 col-lg-offset-3">
+        <div class="col-xs-12 col-xs-offset-0 col-md-6 col-md-offset-3">
             <div class="text-center">
-
                 <!--Toevoegen boek-->
-                <h2>Toevoegen van boeken</h2>
+                <h1 class="title">E-Book toevoegen</h1>
                 @Html.ValidationSummary()
-                <form id="upload" method="post" enctype="multipart/form-data">
-                    <fieldset>
-                        <h3>Voeg een boek toe</h3>
-                        <br />
-                        <!-- Lijst met Toevoegende-->
-                        <p>
-                            <label for="titel">Titel:</label>
-                            <input type="text" name="titel" value="@Request.Form["titel"]" />
-                            @Html.ValidationMessage("titel")
-                        </p>
-                        <p>
-                            <label for="auteur">Auteur:</label>
-                            <input type="text" name="Auteur" value="@Request.Form["Auteur"]" />
-                            @Html.ValidationMessage("Auteur")
-                        </p>
-                        <p>
-                            <label for="datum">Datum:</label>
-                            <input type="date" name="Datum" value="@Request.Form["Datum"]" />
-                            @Html.ValidationMessage("Datum")
-                        </p>
-                        <p>
-                            <label for="waardering">waardering:</label>
-                            <input type="number" name="Waardering" maxlength="5" value="@Request.Form["Waardering"]" />
-                            @Html.ValidationMessage("Waardering")
-                        </p>
-                        <p>
-                            <label for="Taal">Taal:</label>
-                            <input type="text" name="Taal" value="@Request.Form["Taal"]" />
-                            @Html.ValidationMessage("Taal")
-                        </p>
-                        <p>
-                            <label for="Uitgever">Uitgever:</label>
-                            <input type="text" name="Uitgever" value="@Request.Form["Uitgever"]" />
-                            @Html.ValidationMessage("Uitgever")
-                        </p>
-                        <p>
-                            <label for="Genre">Genre:</label>
-                            <input type="text" name="Genre" value="@Request.Form["Genre"]" />
-                            @Html.ValidationMessage("Genre")
-                        </p>
-                        <p>
-                            <label for="Foto">Foto:</label>
-                            <input type="file" name="Foto" value="@Request.Form["Foto"]" accept="image/*" />
+                <div id="book_success" class="isa_success" style="display: none;visibility: hidden;">Succes! E-Book is toegevoegd aan de collectie.</div>
+                <div id="book_fail" class="isa_error" style="display: none;visibility: hidden;">Oeps! Er ging iets fout!</div>
+                <p><a href="~/Default-Page">Terug</a></p>
+                <form id="upload" method="post" enctype="multipart/form-data" class="form-style-7">
 
-                        </p>
+                    <ul>
+                        <li>
+                            <label for="titel">Titel</label>
+                            <input type="text" name="titel" id="titel" maxlength="50" tabindex="1" autofocus="true" spellcheck="true" value="@Request.Form["titel"]">
+                            <span>Vul de naam van het boek in</span>
 
-                        <p>
-                            <label for="Bestand">Bestand:</label>
-                            <input type="file" name="Bestand" value="@Request.Form["Bestand"]" accept="application/pdf" />
-                        </p>
-                        <br /><br />
-                        <p><input type="submit" name="buttonSubmit" value="Voeg Boek toe" /></p>
-                    </fieldset>
+                        </li>
+                        <li>
+                            <label for="auteur">Auteur</label>
+                            <input type="text" name="auteur" id="auteur" maxlength="50" tabindex="2" value="@Request.Form["auteur"]">
+                            <span>Vul de naam van de auteur in</span>
+                        </li>
+                        <li>
+                            <label for="datum">Publicatiedatum</label>
+                            <input type="text" name="datum" id="datum" tabindex="3" value="@Request.Form["datum"]">
+                            <span>Vul de datum van publicatie in</span>
+                        </li>
+                        <li>
+                            <label for="taal">Taal</label>
+                            <input type="text" name="taal" id="taal" tabindex="4" value="@Request.Form["taal"]">
+                            <span>Vul de taal van het boek in</span>
+                        </li>
+                        <li>
+                            <label for="uitgever">Uitgever</label>
+                            <input type="text" name="uitgever" id="uitgever" tabindex="5" value="@Request.Form["uitgever"]">
+                            <span>Vul de uitgever van het boek in</span>
+                        </li>
+                        <li>
+                            <label for="genre">Genre</label>
+                            <input type="text" name="genre" id="genre" tabindex="6" value="@Request.Form["genre"]">
+                            <span>Vul het genre van het boek in</span>
+                        </li>
+                        <li>
+                            <label>Waardering</label>
+                            <div class="stars" style="padding-top: 15px;">
+                                <form action="">
+                                    <input class="star star-5" id="star-5" type="radio" name="star" value="5" @Html.Raw(has5star ? "checked" : "") />
+                                    <label class="star star-5" for="star-5"></label>
+                                    <input class="star star-4" id="star-4" type="radio" name="star" value="4" @Html.Raw(has4star ? "checked" : "") />
+                                    <label class="star star-4" for="star-4"></label>
+                                    <input class="star star-3" id="star-3" type="radio" name="star" value="3" @Html.Raw(has3star ? "checked" : "") />
+                                    <label class="star star-3" for="star-3"></label>
+                                    <input class="star star-2" id="star-2" type="radio" name="star" value="2" @Html.Raw(has2star ? "checked" : "") />
+                                    <label class="star star-2" for="star-2"></label>
+                                    <input class="star star-1" id="star-1" type="radio" name="star" value="1" @Html.Raw(has1star ? "checked" : "") />
+                                    <label class="star star-1" for="star-1"></label>
+                                </form>
+                            </div>
+                        </li>
+                        <li>
+                            <label for="cover">Cover</label>
+                            <div class="box">
+                                <input type="file" name="cover" id="cover" class="inputfile inputfile-2" accept="image/*" />
+                                <label for="cover"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewbox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" /></svg> <span>Kies een cover&hellip;</span></label>
+                            </div>
+                            <span>Selecteer een cover voor het boek</span>
+                        </li>
+                        <li>
+                            <label for="bestand">Bestand</label>
+                            <div class="box">
+                                <input type="file" name="bestand" id="bestand" class="inputfile inputfile-2" accept="application/pdf" />
+                                <label for="bestand"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewbox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" /></svg> <span>Kies een PDF&hellip;</span></label>
+                            </div>
+                            <span>Selecteer de PDF van het boek</span>
+                        </li>
+                        <li style="border: none;">
+                            <input type="submit" name="buttonSubmit" value="Toevoegen">
+                        </li>
+                    </ul>
                 </form>
-
+                <p><a href="~/Default-Page">Terug</a></p>
             </div>
         </div>
     </div>

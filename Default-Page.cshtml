@@ -1,3 +1,20 @@
+@section style{
+    <style>
+        tbody tr:hover{
+            cursor: pointer;
+        }
+                label.star{
+            padding: 2px;
+            font-size: 12px;
+        }
+        label.star::before{
+            content: "";
+        }
+        label.star:hover{
+            transform: none;
+        }
+</style>
+}
 @{
     if (!WebSecurity.IsAuthenticated)
     {
@@ -5,7 +22,6 @@
             + Request.Url.LocalPath);
     }
     Layout = "~/_SiteLayout.cshtml";
-
     var content = Request["content"];
     string contentQuery = "";
     bool hasTitleContent = false;
@@ -13,7 +29,6 @@
     bool hasGenreContent = false;
     bool hasRatingContent = false;
     bool hasLangContent = false;
-
     switch (content)
     {
         default:
@@ -41,7 +56,6 @@
             contentQuery = "Taal";
             break;
     }
-
     var db = Database.Open("e-Books");
     var query = "SELECT * FROM boeken";
     var queryResult = db.Query(query);
@@ -51,44 +65,61 @@
         var filter = "%" + Request["filter"] + "%";
         queryResult = db.Query(query, filter);
     }
-
     var columns = new[] { "Titel", "Auteur", "Datum", "Waardering", "Taal", "Uitgever", "Genre" };
     var grid = new WebGrid(queryResult, columnNames: columns, canPage: false, canSort: true);
-
 }
-
 @section script{
-<script>
-    var request;
-    
-    $("#book-table tbody tr").hover(function (event) {
+    <script>
 
-        request = $.ajax({
-            type: 'GET',
-            url: "./GetBookCover?id=" + $(this).find(".hidden-row").text(),
-            data: {},
-            dataType: 'text',
-            async: false,
-            cache: false,
-            timeout: 1000,
-            success: function (data)
-            { $("#cover-image").attr('src', 'data:image/png;base64,' + data); },
-            error: function () { }
+        
+        // ajax request to get image from server
+        $("#book-table tbody tr").mouseenter(function (event) {
+               $.ajax({
+                type: 'GET',
+                url: "./GetBookCover?id=" + $(this).find(".hidden-row").text(),
+                data: {},
+                dataType: 'text',
+                async: false,
+                cache: false,
+                timeout: 1000,
+                success: function (data)
+                { $("#cover-image").attr('src', 'data:image/png;base64,' + data); },
+                error: function () { $("#cover-image").attr('src', 'Images/logo.png'); }
+            });
         });
-    });
-</script>
+        // set img back to default
+        $("#book-table tbody tr").mouseleave(function () {
+            if (!!$("#book-table tbody tr").
+                        filter(function() { return $(this).is(":hover"); }).length)
+            {
+                 $("#cover-image").attr('src', 'Images/logo.png');
+            }
+        
+        });
+        
+    </script>
+    <script>
+        $(function () {
+            $('tbody tr').hover(function () {
+                $(this).toggleClass('clickable');
+            }).on('click', function () {
+                location.href = '/BekijkBoek?id=' + $(this).find('td:first').text();
+
+            });
+        });
+    </script>
 }
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12 col-md-offset-2">
-            <h1>De E-Book Collectie</h1>
+            <h1 class="title">De E-Book Collectie</h1>
         </div>
     </div>
     <div class="row">
         <div class="col-xs-12 col-md-2">
             <div class="panel" style="padding: 5px;">
                 <form>
-                    <div class="form-group">
+                    <div class="form-group" style="margin-bottom: 0px;">
                         <div class="input-group">
                             <input type="text" name="filter" class="form-control input-lg search-special" placeholder="Zoekterm..." value="@Request["filter"]" tabindex="1" />
                             <span class="input-group-btn">
@@ -132,17 +163,39 @@
                                      htmlAttributes: new { id = "book-table" },
                                      columns: grid.Columns(
                 grid.Column(columnName:"id", style: "hidden-row", format: @<span>@item.ID</span>),
-                grid.Column(format:
-                @<a href="Download.cshtml?id=@item.ID&name=@HttpUtility.UrlEncode(item.Titel)">
-                        <img alt="ImageName" src="~/Images/logo.gif" height="35" width="35">
+                grid.Column(style:"text-center", 
+                format:
+                @<div>
+                    <div class="hidden-xs hidden-sm hidden-md" style="display: inline;">
+                        <a href="VerwijderBoek2?id=@item.ID">
+                            <img alt="Boek verwijderen" src="Images/delete.png" height="35" width="35" />
+                        </a>
+                        <a href="AanpassenBoek2?id=@item.ID">
+                            <img alt="Boek aanpassen" src="Images/edit.png" height="35" width="35" />
+                        </a>
+                    </div>
+                    <a href="Download.cshtml?id=@item.ID&name=@HttpUtility.UrlEncode(item.Titel)">
+                        <img alt="Boek downloaden" src="Images/download.png" height="35" width="35">
                     </a>
-                ),
-
-
+                </div>),
+                
                 grid.Column("Titel"),
                 grid.Column("Auteur"),
                 grid.Column("Datum"),
-                grid.Column("Waardering"),
+                grid.Column("Waardering", format: @<div class="stars" style="padding-top: 15px;">
+                                <form action="">
+                                    <input class="star star-5" type="radio" disabled @Html.Raw(item.Waardering == 5 ? "checked" : "") />
+                                    <label class="star star-5"></label>
+                                    <input class="star star-4" type="radio" disabled @Html.Raw(item.Waardering == 4 ? "checked" : "") />
+                                    <label class="star star-4"></label>
+                                    <input class="star star-3" type="radio" disabled @Html.Raw(item.Waardering == 3 ? "checked" : "") />
+                                    <label class="star star-3"></label>
+                                    <input class="star star-2" type="radio" disabled @Html.Raw(item.Waardering == 2 ? "checked" : "") />
+                                    <label class="star star-2"></label>
+                                    <input class="star star-1" type="radio" disabled @Html.Raw(item.Waardering == 1 ? "checked" : "") />
+                                    <label class="star star-1"></label>
+                                </form>
+                            </div>),
                 grid.Column("Taal"),
                 grid.Column("Uitgever"),
                 grid.Column("Genre")
@@ -151,14 +204,9 @@
             </div>
         </div>
         <div class="hidden-xs hidden-sm col-md-2">
-            <form class="panel">
-                <div>
-                    <img id="cover-image" width="200" height="=300" src="Images/child-reading-book_icon-icons.com_49293.png" alt="cover" />
-                </div>
-            </form>
+            <div class="cover-image-box">
+                <img id="cover-image" src="Images/logo.png" alt="cover" />
+            </div>
         </div>
     </div>
 </div>
-<br />
-<br />
-<br />

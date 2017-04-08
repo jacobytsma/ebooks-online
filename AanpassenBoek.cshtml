@@ -50,64 +50,53 @@
     }
 }
 
+@section script{
+    <script>
+        $(function () {
+            $('tbody tr').hover(function () {
+                $(this).toggleClass('clickable');
+            }).on('click', function () {
+                location.href = '/AanpassenBoek2?id=' + $(this).find('td:first').text();
 
-<!DOCTYPE html>
+            });
+        });
+    </script>
+}
 
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    @Html.ValidationSummary()
-</head>
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-xs-12 col-md-6 col-md-offset-3">
-                <h2>Boek aanpassen</h2>
-                <form method="get">
-                    <div>
-                        <label for="searchGenre">Genre:</label>&emsp;
-                        <input type="text" placeholder="Laat leeg om alle boeken te zien" name="searchGenre" value="@Request.QueryString["searchGenre"]" />
-                        <input type="Submit" value="Search Genre" /><br />
-                    </div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 col-md-6 col-md-offset-3">
+            <h2>Boek aanpassen</h2>
+                @Html.ValidationSummary()
+            <form method="get">
+                <div>
+                    <label for="searchGenre">Genre:</label>&emsp;
+                    <input type="text" placeholder="Laat leeg om alle boeken te zien" name="searchGenre" value="@Request.QueryString["searchGenre"]" />
+                    <input type="Submit" value="Search Genre" /><br />
+                </div>
 
-                    <div>
-                        <label for="SearchTitle">Titel:</label>&emsp;&emsp;
-                        <input type="text"  placeholder="Laat leeg om alle boeken te zien" name="searchTitle" value="@Request.QueryString["searchTitle"]" />
-                        <input type="Submit" value="Search Title" /><br />
-                    </div>
+                <div>
+                    <label for="SearchTitle">Titel:</label>&emsp;&emsp;
+                    <input type="text"  placeholder="Laat leeg om alle boeken te zien" name="searchTitle" value="@Request.QueryString["searchTitle"]" />
+                    <input type="Submit" value="Search Title" /><br />
+                </div>
 
-                    <br />
+                <br />
 
-                    <div id="grid" class="table-special">
-                        @grid.GetHtml(
-                        tableStyle: "table",
-                        headerStyle: "head",
-                        columns: grid.Columns(
-                        grid.Column(style:"hidden-row", format: @<a style="display:none;" type="hidden" href="~/AanpassenBoek2?id=@item.ID">@item.ID</a>),
-                        grid.Column("Titel"),
-                        grid.Column("Genre")
-                          )
-                         )
+                <div id="grid" class="table-special">
+                    @grid.GetHtml(
+                    tableStyle: "table",
+                    headerStyle: "head",
+                    columns: grid.Columns(
+                    grid.Column(style:"hidden-row", format: @<a style="display:none;" type="hidden" href="~/AanpassenBoek2?id=@item.ID">@item.ID</a>),
+                    grid.Column("Titel"),
+                    grid.Column("Genre")
+                        )
+                        )
 
-                    </div>
-
-                    @section script{
-                        <script type="text/javascript">
-                            $(function () {
-                                $('tbody tr').hover(function () {
-                                    $(this).toggleClass('clickable');
-                                }).on('click', function () {
-                                    location.href = '/AanpassenBoek2?id=' + $(this).find('td:first').text();
-
-                                });
-                            });
-                        </script>
-                    }
-
-                    <p><a href="~/Default-Page">Return</a></p>
-                </form>
-            </div>
+                </div>
+                <p><a href="~/Default-Page">Terug</a></p>
+            </form>
         </div>
     </div>
-</body>
-</html>
+    </div>
