@@ -22,8 +22,7 @@
                         <a class="navbar-brand" href="~/Default-Page.cshtml">E-Books Online</a>
                         <img alt="logo" src="~/Images/logo.png" height="50" width="50" />
                     </div>
-                    <ul class="nav navbar-nav">
-                       
+                    <ul class="nav navbar-nav">   
                         @if (Roles.IsUserInRole("admin"))
                         {
                             <li><a href="~/ToevoegenBoek.cshtml">Toevoegen</a></li>

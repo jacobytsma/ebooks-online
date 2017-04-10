@@ -14,7 +14,7 @@
     var db = Database.Open("StarterSite");
     var query = "";
     var filter = "";
-    dynamic queryResult=  null;
+    dynamic queryResult = null;
     if (IsPost)
     {
         if (Request.Form["id"] == null)
@@ -77,15 +77,16 @@
     var grid = new WebGrid(queryResult, columnNames: columns, canPage: false, canSort: true, ajaxUpdateContainerId: "grid");
 
     bool IsMaster = User.IsInRole("master");
-
 }
 @section script{
 <script>
     var $_GET = {};
+
     document.location.search.replace(/\??(?:([^=]+)=([^&]*)&?)/g, function () {
         function decode(s) {
             return decodeURIComponent(s.split("+").join(" "));
         }
+
         $_GET[decode(arguments[1])] = decode(arguments[2]);
     });
     $(document).ready(function () {
@@ -179,7 +180,6 @@
                                 </span>
                             }
                         }
-
                     </div>
                     )
                  ))

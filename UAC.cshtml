@@ -43,7 +43,6 @@
         else if (Request.QueryString["control"] == "master"){
             Response.Redirect("Gebruikerslijst?migrate=master&id=" + Request["id"]);
         }
-
         Response.Redirect("Gebruikerslijst?success=true&id=" + queryResult.UserId + "&output=" + output);
     }
     else
