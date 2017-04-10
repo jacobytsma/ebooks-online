@@ -13,6 +13,11 @@
         label.star:hover{
             transform: none;
         }
+        thead tr.head th:first-child {
+    visibility: hidden;
+    display: none;
+}
+
 </style>
 }
 @{
@@ -21,6 +26,8 @@
         Response.Redirect("~/LoginPage?returnUrl="
             + Request.Url.LocalPath);
     }
+        
+    Page.Title = "Home";
     Layout = "~/_SiteLayout.cshtml";
     var content = Request["content"];
     string contentQuery = "";
@@ -166,6 +173,8 @@
                 grid.Column(style:"text-center", 
                 format:
                 @<div>
+                    @if (Roles.IsUserInRole("admin"))
+                    {
                     <div class="hidden-xs hidden-sm hidden-md" style="display: inline;">
                         <a href="VerwijderBoek2?id=@item.ID">
                             <img alt="Boek verwijderen" src="Images/delete.png" height="35" width="35" />
@@ -174,6 +183,7 @@
                             <img alt="Boek aanpassen" src="Images/edit.png" height="35" width="35" />
                         </a>
                     </div>
+                    }
                     <a href="Download.cshtml?id=@item.ID&name=@HttpUtility.UrlEncode(item.Titel)">
                         <img alt="Boek downloaden" src="Images/download.png" height="35" width="35">
                     </a>

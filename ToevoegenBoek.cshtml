@@ -15,7 +15,7 @@
             + Request.Url.LocalPath);
     }
     Layout = "~/_SiteLayout.cshtml";
-     Page.Title = "E-Book Toevoegen";
+    Page.Title = "Toevoegen";
     Validation.RequireField("titel", "Wat is de titel van het boek?");
     Validation.RequireField("auteur", "Wie is de auteur?");
     Validation.RequireField("datum", "Wanneer is het boek uitgegeven?");
@@ -64,11 +64,19 @@
     {
         if (Request.Files[0].ContentLength == 0
         || !Request.Files[0].ContentType.StartsWith("image/")){
-            ModelState.AddError("cover", "Voeg een foto van de cover toe");
+            ModelState.AddError("cover", "Cover ongeldig. (toegestaan: .png/jpg/jpeg/gif)");
         }
         if (Request.Files[1].ContentLength == 0
         || Request.Files[1].ContentType != "application/pdf"){
-            ModelState.AddError("bestand", "Upload het bestandstype .PDF");
+            ModelState.AddError("bestand", "E-Book ongeldig. (toegestaan: .PDF)");
+        }
+        if (Request.Form["datum"].Length != 10){
+            ModelState.AddError("datum", "Ingevoerde datum is ongeldig.");
+        }
+        int star = Convert.ToInt32(Request.Form["star"]);
+        if (star <= 0 
+        || star > 5){
+            ModelState.AddError("star", "Waardering moet 1-5 sterren zijn");
         }
 
         if (Validation.IsValid() && ModelState.IsValid)
@@ -199,22 +207,22 @@
                         </li>
                         <li>
                             <label for="datum">Publicatiedatum</label>
-                            <input type="text" name="datum" id="datum" tabindex="3" value="@Request.Form["datum"]">
+                            <input type="text" name="datum" id="datum" maxlength="10" tabindex="3" value="@Request.Form["datum"]">
                             <span>Vul de datum van publicatie in</span>
                         </li>
                         <li>
                             <label for="taal">Taal</label>
-                            <input type="text" name="taal" id="taal" tabindex="4" value="@Request.Form["taal"]">
+                            <input type="text" name="taal" id="taal" maxlength="50" tabindex="4" value="@Request.Form["taal"]">
                             <span>Vul de taal van het boek in</span>
                         </li>
                         <li>
                             <label for="uitgever">Uitgever</label>
-                            <input type="text" name="uitgever" id="uitgever" tabindex="5" value="@Request.Form["uitgever"]">
+                            <input type="text" name="uitgever" id="uitgever" maxlength="50" tabindex="5" value="@Request.Form["uitgever"]">
                             <span>Vul de uitgever van het boek in</span>
                         </li>
                         <li>
                             <label for="genre">Genre</label>
-                            <input type="text" name="genre" id="genre" tabindex="6" value="@Request.Form["genre"]">
+                            <input type="text" name="genre" id="genre" maxlength="50" tabindex="6" value="@Request.Form["genre"]">
                             <span>Vul het genre van het boek in</span>
                         </li>
                         <li>
@@ -229,7 +237,7 @@
                                     <label class="star star-3" for="star-3"></label>
                                     <input class="star star-2" id="star-2" type="radio" name="star" value="2" @Html.Raw(has2star ? "checked" : "") />
                                     <label class="star star-2" for="star-2"></label>
-                                    <input class="star star-1" id="star-1" type="radio" name="star" value="1" @Html.Raw(has1star ? "checked" : "") />
+                                    <input class="star star-1" id="star-1" type="radio" name="star" value="1" @Html.Raw(has1star || !IsPost ? "checked" : "") />
                                     <label class="star star-1" for="star-1"></label>
                                 </form>
                             </div>
