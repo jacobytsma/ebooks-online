@@ -13,6 +13,11 @@
         label.star:hover{
             transform: none;
         }
+        thead tr.head th:first-child {
+    visibility: hidden;
+    display: none;
+}
+
 </style>
 }
 @{
@@ -21,6 +26,7 @@
         Response.Redirect("~/LoginPage?returnUrl="
             + Request.Url.LocalPath);
     }
+    Page.Title = "Home";
     Layout = "~/_SiteLayout.cshtml";
     var content = Request["content"];
     string contentQuery = "";

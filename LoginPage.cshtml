@@ -1,5 +1,8 @@
 @{
-    Page.Title = "Log in";
+    if (WebSecurity.IsAuthenticated)
+    {
+        Response.Redirect("~/Default-Page");
+    }
     // Initialize general page variables
     var email = "";
     var password = "";
@@ -119,6 +122,7 @@
         <!--Responsive Mobiel-->
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <meta charset="utf-8" />
+        <title>E-Books Online - Login</title>
     </head>
     <body>
         <div class="container">
@@ -133,11 +137,11 @@
                             <ul style="width: 60%; margin: 0 auto;">
                                 <li class="email">
                                     <label for="email" @if (!ModelState.IsValidField("email")) { <text> class="error-label" </text>    }>E-Mail</label>
-                                    <input type="text" id="email" name="email" value="@email" @Validation.For("email") />
+                                    <input type="text" id="email" name="email" tabindex="1" maxlength="50" value="@email" @Validation.For("email") />
                                 </li>
                                 <li class="password">
                                     <label for="password" @if (!ModelState.IsValidField("password")) { <text> class="error-label" </text>    }>Wachtwoord</label>
-                                    <input type="password" id="password" name="password" @Validation.For("password") />
+                                    <input type="password" id="password" name="password" tabindex="2" maxlength="50" @Validation.For("password") />
                                 </li>
                                 <li class="remember-me" style="border: none;">
                                     

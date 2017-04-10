@@ -24,6 +24,9 @@
                     </div>
                     <ul class="nav navbar-nav">
                         <li><a href="~/ToevoegenBoek.cshtml">Toevoegen</a></li>
+                        @if (Roles.IsUserInRole("admin")){
+                            <li><a href="~/Gebruikerslijst.cshtml">Gebruikerslijst</a></li>
+                        }
                         @*<li><a href="~/AanpassenBoek.cshtml">Aanpassen</a></li>
                         <li><a href="~/VerwijderBoek.cshtml">Verwijderen</a></li>*@
                     </ul>
@@ -48,7 +51,7 @@
             </div>
 
             <footer id="footer">
-                <span>Made with &#9829; in Bootstrap by: Dani&euml;l Zondervan, Joop Westra and Yacob Ytsma</span>
+                <span>Made with &#9829; in Bootstrap by: Dani&euml;l Zondervan, Joop Westra and Jacob Ytsma</span>
             </footer>
         </div>
         <!-- JQuery Scripts-->

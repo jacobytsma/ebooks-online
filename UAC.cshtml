@@ -1,0 +1,47 @@
+﻿@{
+    if (!WebSecurity.IsAuthenticated)
+    {
+        Response.Redirect("~/LoginPage?returnUrl="
+            + Request.Url.LocalPath);
+    }
+    if (!Roles.IsUserInRole("admin"))
+    {
+        Response.Redirect("~/Default-Page");
+    }
+    if (Request.QueryString["id"].Length <= 0
+    || Request.QueryString["control"].Length <= 0)
+    {
+        Response.Redirect("~/Gebruikerslijst");
+    }
+    Page.Title = "UAC";
+
+    var db = Database.Open("StarterSite");
+    var query = "SELECT * FROM UserProfile WHERE UserId = @0";
+    var queryResult = db.QuerySingle(query, Request.QueryString["id"]);
+    if (queryResult != null)
+    {
+        var user = queryResult.Email;
+        var output = "none";
+        if (!Roles.IsUserInRole(user,"admin")
+            && Request.QueryString["control"] == "grant")
+        {
+            Roles.AddUserToRole(user, "admin");
+            output = "grant";
+        }
+        else if (Roles.IsUserInRole(user,"admin")
+            && Request.QueryString["control"] == "revoke")
+        {
+            Roles.RemoveUserFromRole(user, "admin");
+            output = "revoke";
+        }
+        else if (Request.QueryString["control"] == "delete"){
+            Response.Redirect("Gebruikerslijst?confirm=ask&id=" + Request["id"]);
+        }
+
+        Response.Redirect("Gebruikerslijst?success=true&id=" + queryResult.UserId + "&output=" + output);
+    }
+    else
+    {
+        Response.Redirect("Gebruikerslijst?fail=true");
+    }
+}
