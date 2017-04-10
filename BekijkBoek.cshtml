@@ -1,0 +1,219 @@
+﻿@{
+    if (!WebSecurity.IsAuthenticated)
+    {
+        Response.Redirect("~/LoginPage?returnUrl="
+            + Request.Url.LocalPath);
+    }
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "Details";
+    var titel = "";
+    var auteur = "";
+    var datum = "";
+    int waard = 0;
+    var taal = "";
+    var uitgever = "";
+    var genre = "";
+    var boekid = "";
+
+    bool has1star = false;
+    bool has2star = false;
+    bool has3star = false;
+    bool has4star = false;
+    bool has5star = false;
+    bool formDisabled = false;
+
+    var db = Database.Open("e-Books");
+
+        if (!Request.QueryString["ID"].IsEmpty())
+        {
+            boekid = Request.QueryString["ID"];
+            var dbCommand = "SELECT * FROM Boeken WHERE ID = @0";
+            var row = db.QuerySingle(dbCommand, boekid);
+
+            if (row != null)
+            {
+                titel = row.Titel;
+                auteur = row.Auteur;
+                datum = row.Datum;
+                waard = row.Waardering;
+                taal = row.Taal;
+                uitgever = row.Uitgever;
+                genre = row.Genre;
+
+                switch (waard)
+                {
+                    default:
+                        break;
+                    case 1:
+                        has1star = true;
+                        break;
+                    case 2:
+                        has2star = true;
+                        break;
+                    case 3:
+                        has3star = true;
+                        break;
+                    case 4:
+                        has4star = true;
+                        break;
+                    case 5:
+                        has5star = true;
+                        break;
+                }
+            }
+            else
+            {
+
+                Validation.AddFormError("Er is geen boek gevonden");
+                formDisabled = true;
+            }
+        }
+        else
+        {
+            Validation.AddFormError("Er is geen boek geselecteerd");
+            formDisabled = true;
+        }
+}
+@section style{
+    <style>
+        :not(output):-moz-ui-invalid {
+            box-shadow: none;
+        } 
+                input:invalid {
+            box-shadow: none;
+        }
+        .form-style-7{
+            max-width: 600px;
+        }
+        .form-style-7 li {
+            text-align: left; 
+        }
+        .form-style-7 li p 
+        {
+            margin:  0;
+        }
+    </style>
+}
+@section script{
+    <script>
+                var $_GET = {};
+        
+                document.location.search.replace(/\??(?:([^=]+)=([^&]*)&?)/g, function () {
+                    function decode(s) {
+                        return decodeURIComponent(s.split("+").join(" "));
+                    }
+        
+                    $_GET[decode(arguments[1])] = decode(arguments[2]);
+                });
+                $( document ).ready(function() {
+                $.ajax({
+                type: 'GET',
+                url: "./GetBookCover?id=" + $_GET["id"],
+                data: {},
+                dataType: 'text',
+                async: false,
+                cache: false,
+                timeout: 1000,
+                success: function (data)
+                { $("#cover-image").attr('src', 'data:image/png;base64,' + data); },
+                error: function () { $("#cover-image").attr('src', 'Images/logo.png'); }
+            });
+        });
+    </script>
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 col-xs-offset-0 col-md-6 col-md-offset-3">
+            <div class="text-center">
+                <h1 class="title">E-Book Details</h1>
+                @Html.ValidationSummary()
+                <p><a href="~/Default-Page">Terug</a></p>
+                <form class="form-style-7">
+                    <ul>
+                        <li>
+                            <label>Acties</label>
+                            <div style="@(formDisabled ? "display:none;" : "")">
+                                <a href="VerwijderBoek2?id=@boekid">
+                                    <img alt="Boek verwijderen" src="Images/delete.png" height="35" width="35" />
+                                </a>
+                                <a href="AanpassenBoek2?id=@boekid">
+                                    <img alt="Boek aanpassen" src="Images/edit.png" height="35" width="35" />
+                                </a>
+                                <a href="Download.cshtml?id=@boekid&name=@HttpUtility.UrlEncode(titel)">
+                                    <img alt="Boek downloaden" src="Images/download.png" height="35" width="35">
+                                </a>
+                            </div>
+                        </li>
+                        <li>
+                            <label>Titel</label>
+                            <p>@titel</p>
+                        </li>
+                        <li>
+                            <label>Auteur</label>
+                            <p>@auteur</p>
+                        </li>
+                        <li>
+                            <label>Publicatiedatum</label>
+                            <p>@datum</p>
+                        </li>
+                        <li>
+                            <label>Taal</label>
+                            <p>@taal</p>
+                        </li>
+                        <li>
+                            <label for="uitgever">Uitgever</label>
+                            <p>@uitgever</p>
+                        </li>
+                        <li>
+                            <label for="genre">Genre</label>
+                            <p>@genre</p>
+                        </li>
+                        <li>
+                            <label>Waardering</label>
+                            <div class="stars" style="padding-top: 15px;@(formDisabled ? "display:none;" : "")">
+                                <form action="">
+                                    <input class="star star-5" id="star-5" type="radio" disabled @Html.Raw(has5star ? "checked" : "") />
+                                    <label class="star star-5" for="star-5"></label>
+                                    <input class="star star-4" id="star-4" type="radio" disabled @Html.Raw(has4star ? "checked" : "") />
+                                    <label class="star star-4" for="star-4"></label>
+                                    <input class="star star-3" id="star-3" type="radio" disabled @Html.Raw(has3star ? "checked" : "") />
+                                    <label class="star star-3" for="star-3"></label>
+                                    <input class="star star-2" id="star-2" type="radio" disabled @Html.Raw(has2star ? "checked" : "") />
+                                    <label class="star star-2" for="star-2"></label>
+                                    <input class="star star-1" id="star-1" type="radio" disabled @Html.Raw(has1star ? "checked" : "") />
+                                    <label class="star star-1" for="star-1"></label>
+                                </form>
+                            </div>
+                        </li>
+                        <li>
+                            <label>Cover</label>
+                            <img id="cover-image" src="Images/logo.png" alt="cover" style="max-width: 100%; @(formDisabled ? "display:none;" : "")" />
+                        </li>
+                        <li>
+                            <label>Bestand</label>
+                            <div class="box" style="@(formDisabled ? "display:none;" : "")">
+                                <input type="file" name="bestand" id="bestand" class="inputfile inputfile-2" accept="application/pdf" disabled />
+                                <label for="bestand"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewbox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" /></svg> <span>@(IsPost ? Request.Form["titel"] : titel)&hellip;</span></label>
+                            </div>
+                        </li>
+                        <li>
+                            <label>Acties</label>
+                            <div style="@(formDisabled ? "display:none;" : "")">
+                                 <a href="VerwijderBoek2?id=@boekid">
+                                    <img alt="Boek verwijderen" src="Images/delete.png" height="35" width="35" />
+                                </a>
+                                <a href="AanpassenBoek2?id=@boekid">
+                                    <img alt="Boek aanpassen" src="Images/edit.png" height="35" width="35" />
+                                </a>
+                                <a href="Download.cshtml?id=@boekid&name=@HttpUtility.UrlEncode(titel)">
+                                    <img alt="Boek downloaden" src="Images/download.png" height="35" width="35">
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </form>
+                <p><a href="~/Default-Page">Terug</a></p>
+            </div>
+        </div>
+    </div>
+</div>

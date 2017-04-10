@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>E-Books Online - @Page.Title</title>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="~/css/main.css" />
+        <link rel="stylesheet" href="~/css/Logo.css" />
+        @RenderSection("style", required: false)
+        <!-- Optional theme -->
+        <!--Responsive Mobiel-->
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    </head>
+    <body>
+        <div id="wrapper">
+            <!--The Navbar Element-->
+            <nav class="navbar navbar-default" id="header">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="~/Default-Page.cshtml">E-Books Online</a>
+                        <img alt="logo" src="~/Images/logo.png" height="50" width="50" />
+                    </div>
+                    <ul class="nav navbar-nav">   
+                        @if (Roles.IsUserInRole("admin"))
+                        {
+                            <li><a href="~/ToevoegenBoek.cshtml">Toevoegen</a></li>
+                            <li><a href="~/Gebruikerslijst.cshtml">Gebruikerslijst</a></li>
+                        }
+                        @*<li><a href="~/AanpassenBoek.cshtml">Aanpassen</a></li>
+                        <li><a href="~/VerwijderBoek.cshtml">Verwijderen</a></li>*@
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right nav-login">
+                        @if (WebSecurity.IsAuthenticated)
+                        {
+                            <li><a class="email" href="~/Index.cshtml" title="Manage" style="color:white">@WebSecurity.CurrentUserName</a></li>
+                            <li style="color:white">
+                                <a href="javascript:document.getElementById('logoutForm').submit()">
+                                    <form id="logoutForm" action="~/Logout" method="post">
+                                        @AntiForgery.GetHtml()
+                                        <span style="color: white;">Log uit</span>
+                                    </form>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </nav>
+            <div id="content">
+                @RenderBody()
+            </div>
+
+            <footer id="footer">
+                <span>Made with &#9829; in Bootstrap by: Dani&euml;l Zondervan, Joop Westra and Jacob Ytsma</span>
+            </footer>
+        </div>
+        <!-- JQuery Scripts-->
+        <script src="js/jquery.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('.validation-summary-errors ul').attr("style", "list-style:none;");
+                $('.validation-summary-errors li').addClass("isa_warning");
+                $('.validation-summary-errors').removeClass().attr("style", "max-width:500px;margin: 0 auto;");
+            });
+        </script>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="js/bootstrap/bootstrap.min.js"></script>
+        @RenderSection("script", required: false)
+    </body>
+</html>

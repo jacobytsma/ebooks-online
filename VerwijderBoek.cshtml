@@ -1,0 +1,122 @@
+﻿@{
+  if (!WebSecurity.IsAuthenticated)
+    {
+        Response.Redirect("~/LoginPage?returnUrl="
+            + Request.Url.LocalPath);
+    }
+  Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "Verwijderen";
+    var titel = "";
+    var auteur = "";
+    var datum = "";
+    var waardering = "";
+    var taal = "";
+    var uitgever = "";
+    var genre = "";
+    var boekid = "";
+    //database geopend, en database wordt een var gegeven ook wordt searchterm aangemaakt.
+    var db = Database.Open("e-Books");
+    var selectCommand = "SELECT * FROM boeken";
+    var searchTerm = "";
+
+    //The QueryString collection retrieves the values of the variables in the HTTP query string.
+    // als de box niet leeg is wordt de
+    if (!Request.QueryString["searchGenre"].IsEmpty())
+    {
+
+        //@0,@1,@2 = able to search for any genre that the user enters
+        //searchterm wordt gevuld met searchgenre
+        selectCommand = "SELECT * FROM boeken WHERE Genre = @0";
+        searchTerm = Request.QueryString["searchGenre"];
+    }
+
+    //@0,@1,@2 = able to search for any genre that the user enters
+    //searchterm wordt gevuld met searchtitel en hoef je niet exact de hele titel te typen
+    if (!Request.QueryString["searchTitle"].IsEmpty())
+    {
+        selectCommand = "SELECT * FROM boeken WHERE Titel LIKE @0";
+        searchTerm = "%" + Request.QueryString["searchTitle"] + "%";
+    }
+
+    //wordt alles gefilterd en gesorteerd op waar je op gezocht hebt en is er een limiet van 3 rijen per pagina
+    var selectedData = db.Query(selectCommand, searchTerm);
+    var grid = new WebGrid(source: selectedData, defaultSort: "Genre", rowsPerPage: 3,canPage:false);
+
+
+    //Als er geklikt wordt voegt hij dit toe als er niks is toegevoegd
+    if (IsPost)
+    {
+        Validation.RequireField("titel", "U heeft geen titel toegevoegd");
+        Validation.RequireField("auteur", "U heeft geen titel toegevoegd");
+        Validation.RequireField("datum", "U heeft geen datum toegevoed");
+        Validation.RequireField("waardering", "U heeft geen waardering toegevoegd");
+        Validation.RequireField("taal", "U heeft geen taal toegevoegd");
+        Validation.RequireField("uitgever", "U heeft geen uitgever toegevoegd");
+        Validation.RequireField("genre", "U heeft geen genre toegevoegd");
+
+        //you get the value of a text box
+        titel = Request.Form["titel"];
+        auteur = Request.Form["auteur"];
+        datum = Request.Form["datum"];
+        waardering = Request.Form["waardering"];
+        taal = Request.Form["taal"];
+        uitgever = Request.Form["uitgever"];
+        genre = Request.Form["genre"];
+    }
+}
+
+@Html.ValidationSummary()
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 col-md-6 col-md-offset-3">
+            <h3>Boek verwijderen</h3>
+
+            <!--wordt searchgenre opgehaald, zoekbalk en submitgenre button aangemaakt en blijft de ingevoerde text staan in het textvak-->
+            <form method="get">
+                <div>
+                    <label for="searchGenre">Genre:</label>&emsp;
+                    <input type="text" placeholder="Laat leeg om alle boeken te zien" name="searchGenre" value="@Request.QueryString["searchGenre"]" />
+                    <input type="Submit" value="Search Genre" /><br />
+                </div>
+
+                <!--wordt searchtitel opgehaald, zoekbalk en submittitel button aangemaakt en blijft de ingevoerde text staan in het textvak-->
+                <div>
+                    <label for="SearchTitle">Titel:</label>&emsp;&emsp;
+                    <input type="text" placeholder="Laat leeg om alle boeken te zien" name="searchTitle" value="@Request.QueryString["searchTitle"]" />
+                    <input type="Submit" value="Search Title" /><br />
+                </div>
+            </form>
+            <br/>
+
+                    <div id="grid" class="table-special">
+                        @grid.GetHtml(
+                        tableStyle: "table",
+                        headerStyle: "head",
+                        columns: grid.Columns(
+                        grid.Column(style:"hidden-row", format: @<a style="display:none;" type="hidden" href="~/AanpassenBoek2?id=@item.ID">@item.ID</a>),
+                        grid.Column("Titel"),
+                        grid.Column("Genre")
+                          )
+                         )
+
+                    </div>
+            <!--bij aanraking krijgt rij een kleur en je kunt de rij aanklikken en gaat hij naar een pagina met het boek dat verwijderd moet worden -->
+            @section script{
+                <script>
+                    $(function () {
+                        $('tbody tr').hover(function () {
+                            $(this).toggleClass('clickable');
+                        }).on('click', function () {
+                            location.href = '/VerwijderBoek2?id=' + $(this).find('td:first').text();
+                    
+                        });
+                    });
+                </script>
+            }
+
+            <p><a href="~/Default-Page">Return</a></p>
+
+
+        </div>
+    </div>
+</div>

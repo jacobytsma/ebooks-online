@@ -1,0 +1,31 @@
+﻿@{
+    if (!WebSecurity.IsAuthenticated)
+    {
+        Response.Redirect("~/LoginPage?returnUrl="
+            + Request.Url.LocalPath);
+    }
+    var id = Request["id"];
+    if (id == null || id == ""){
+        Response.Clear();
+        Response.StatusCode = 404;
+        Response.End();
+    }
+    else
+    {
+        var files = Directory.GetFiles(Server.MapPath("~/uploads/"));
+        var file = files.FirstOrDefault(x => x.Contains("cover-" + id));
+        if (file != null)
+        {
+            var data = File.ReadAllBytes(file);
+            var encoded = Convert.ToBase64String(data);
+            Response.Write(encoded);
+        }
+        else
+        {
+            
+            Response.Clear();
+            Response.StatusCode = 404;
+            Response.End();
+        }
+    }
+}

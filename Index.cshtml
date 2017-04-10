@@ -1,0 +1,55 @@
+@{
+    if (WebSecurity.IsAuthenticated)
+    {
+        Response.Redirect("~/Default-Page");
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="~/css/Logo.css" />
+        <link rel="stylesheet" href="~/css/main.css" />
+        <!-- Optional theme -->
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <!--Responsive Mobiel-->
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta charset="utf-8" />
+        <title>E-Books Online Voorwoord</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="col-xs-12 col-xs-offset-0 col-md-6 col-md-offset-3">
+                <h1 class="title" data-shadow="E-Books Online">E-Books Online</h1>
+                <form class="panel" style="padding: 2em 0 2em 0;">
+                    <div class="text-center">
+                        <img src="Images/logo.png" alt="L" height="150" width="150" />
+                        <h4>E-Books Online Collectie van Aswin van Woudenberg</h4>
+                        <p>Deze website is van Aswin van Woudenberg en zijn vrienden.<br />Hier plaatst hij al zijn Online E-books</p>
+                        <br>
+                        <p style="display: inline-block">
+                            <a class="a_demo_four" href="RegisterPage.cshtml">Registreer Account</a>
+                        </p>
+
+                        <p style="display: inline-block">
+                            <a class="a_demo_four" href="LoginPage.cshtml">Log in Hier</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- JQuery Scripts-->
+        <script src="js/jquery.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('.validation-summary-errors ul').attr("style", "list-style:none;");
+                $('.validation-summary-errors li').addClass("isa_warning");
+                $('.validation-summary-errors').removeClass().attr("style", "max-width:500px;margin: 0 auto;");
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,193 @@
+﻿@{
+    if (!WebSecurity.IsAuthenticated)
+    {
+        Response.Redirect("~/LoginPage?returnUrl="
+            + Request.Url.LocalPath);
+    }
+    if (!Roles.IsUserInRole("admin"))
+    {
+        Response.Redirect("~/Default-Page");
+    }
+    Page.Title = "Gebruikerslijst";
+    Layout = "~/_SiteLayout.cshtml";
+
+    var db = Database.Open("StarterSite");
+    var query = "";
+    var filter = "";
+    dynamic queryResult = null;
+    if (IsPost)
+    {
+        if (Request.Form["id"] == null)
+        {
+            Response.Redirect("~/Gebruikerslijst?fail=true");
+        }
+        if (Request.Form["migrate"] == null) 
+        {
+            query = "SELECT * FROM UserProfile WHERE UserId=@0";
+            filter = Request.Form["id"];
+            queryResult = db.QuerySingle(query, filter);
+            if (queryResult == null
+                || !(WebMatrix.WebData.WebSecurity.UserExists(queryResult.Email))
+                || User.Identity.Name == queryResult.Email)
+            {
+                Response.Redirect("~/Gebruikerslijst?fail=true");
+            }
+
+            var username = queryResult.Email;
+            var userRoles = Roles.GetRolesForUser(username); 
+            if (userRoles.Length > 0)
+            {
+                Roles.RemoveUserFromRoles(username, userRoles);
+            } 
+        
+            var b1 = 
+            ((SimpleMembershipProvider)Membership.Provider).DeleteAccount(username)
+            & Membership.Provider.DeleteUser(username, true);
+            if (b1){
+                Response.Redirect("~/Gebruikerslijst?success=true&id=" + queryResult.UserId + "&output=delete");
+            }
+            else{
+                Response.Redirect("~/Gebruikerslijst?fail=true");
+            }
+        }
+        else if (Request.Form["migrate"] == "master")
+        {
+            var q2 = db.QuerySingle("SELECT * FROM webpages_UsersInRoles WHERE RoleId = 2");
+            if (q2.UserId.ToString() == Membership.GetUser().ProviderUserKey.ToString())
+            {
+                var q3 = db.QuerySingle("SELECT * FROM UserProfile WHERE UserId = @0", Request.QueryString["id"]);
+                if (q3 != null)
+                {
+                    Roles.RemoveUserFromRole(User.Identity.Name, "master"); 
+                    Roles.AddUserToRole(q3.Email, "master");
+                    Response.Redirect("~/Default-Page");
+                }
+
+            }
+            else
+            {
+                Response.Redirect("~/Gebruikerslijst?fail=true");
+            }
+        }
+    }
+
+    query = "SELECT * FROM UserProfile";
+    queryResult = db.Query(query).OrderBy(c => c.UserId);
+    var columns = new[] { "Email", "UserId" };
+    var grid = new WebGrid(queryResult, columnNames: columns, canPage: false, canSort: true, ajaxUpdateContainerId: "grid");
+
+    bool IsMaster = User.IsInRole("master");
+}
+@section script{
+<script>
+    var $_GET = {};
+
+    document.location.search.replace(/\??(?:([^=]+)=([^&]*)&?)/g, function () {
+        function decode(s) {
+            return decodeURIComponent(s.split("+").join(" "));
+        }
+
+        $_GET[decode(arguments[1])] = decode(arguments[2]);
+    });
+    $(document).ready(function () {
+        if ($_GET["success"] != null
+            || $_GET["fail"] != null
+            || $_GET["confirm"] != null) {
+            var url = window.location.href;
+            //get url after/  
+            var value = url.substring(url.lastIndexOf('/') + 1);
+            //get the part after before ?
+            value = value.split("?")[0];
+            //reset parameter
+            window.history.pushState("string", "", "/" + value);
+        }
+        if ($_GET["success"] != null) {
+            var output = $_GET["output"];
+            if (output != "none") {
+                var text = "";
+                if (output == "grant")
+                    text = "Account #" + $_GET["id"] + " is nu admin";
+                else if (output == "revoke")
+                    text = "Account #" + $_GET["id"] + " is geen admin meer";
+                else if (output == "delete")
+                    text = "Acccount #" + $_GET["id"] + " is verwijderd";
+                $(".title").after("<div class=\"isa_success\">Succes! " + text + "</div>");
+            }
+        }
+        if ($_GET["fail"] != null) {
+            $(".title").after("<div class=\"isa_error\">Oeps! Er ging iets fout!</div>");
+        }
+        if ($_GET["confirm"] != null) {
+            $("#UAC #id").val($_GET["id"]);
+            $(".title").after("<div class=\"isa_warning\">Weet je zeker dat je account #" + $_GET["id"] + " wilt verwijderen? <a href=\"javascript:document.getElementById('UAC').submit()\">Ja</a>/<a href=\"Gebruikerslijst\">Nee</a></div>");
+        }
+        if ($_GET["migrate"] == "master") {
+            $("#UAC #id").val($_GET["id"]);
+            $("#UAC #id").after("<input id=\"migrate\" name=\"migrate\" type=\"text\" value=\"master\"/>");
+            $("#UAC #migrate").val("master");
+            $(".title").after("<div class=\"isa_warning\">Weet je zeker dat je account #" + $_GET["id"] + " master wilt maken? Uw permissies gaan verloren <a href=\"javascript:document.getElementById('UAC').submit()\">Ja</a>/<a href=\"Gebruikerslijst\">Nee</a></div>");
+        }
+    });
+</script>
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 col-xs-offset-0 col-md-6 col-md-offset-3">
+            <h1 class="title">Gebruikers</h1>
+            <div id="grid" class="table-special">
+                @grid.GetHtml(
+                                     tableStyle: "table",
+                                     headerStyle: "head",
+                                     htmlAttributes: new { id = "user-table" },
+                                     emptyRowCellValue: "null",
+                                     columns: grid.Columns(
+                grid.Column("Email"),
+                grid.Column("UserId"),
+                grid.Column(
+                    header:"Is Admin", 
+                    columnName:"IsAdmin",
+                    format: @<span>@(Roles.IsUserInRole(item.Email, "admin") ? Html.Raw("Ja") : Html.Raw("Nee"))</span>),
+                grid.Column(
+                    header:"Acties",
+                    columnName:"",
+                    canSort: false,
+                    format:
+                    @<div>
+                        
+                        @if (IsMaster)
+                        {
+                            var q2 = db.QuerySingle("SELECT * FROM webpages_UsersInRoles WHERE RoleId = 2");
+                            if (q2.UserId != item.UserId)
+                            {
+                                <span>
+                                    <a href="~/UAC?id=@item.UserId&control=delete">
+                                        Account Verwijderen
+                                    </a>
+                                </span>
+                                <span> | </span>
+                                <span>
+                                    <a href="~/UAC?id=@item.UserId&control=@(Roles.IsUserInRole(item.Email, "admin") ? Html.Raw("revoke") : Html.Raw("grant"))">
+                                        @(Roles.IsUserInRole(item.Email, "admin") 
+                                        ? Html.Raw("Admin intrekken") 
+                                        : Html.Raw("Admin toekennen"))
+                                    </a>
+                                </span>
+                                <span> | </span>
+                                <span>
+                                    <a href="~/UAC?id=@item.UserId&control=master">
+                                        Maak Master
+                                    </a>
+                                </span>
+                            }
+                        }
+                    </div>
+                    )
+                 ))
+            </div>
+            <form id="UAC" style="display: none;visibility: hidden" method="post" enctype="multipart/form-data">
+                <input id="id" name="id" type="text" />
+                <input type="submit" value="Send" />
+            </form>
+        </div>
+    </div>
+</div>
