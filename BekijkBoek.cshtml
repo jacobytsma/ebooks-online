@@ -133,12 +133,15 @@
                         <li>
                             <label>Acties</label>
                             <div style="@(formDisabled ? "display:none;" : "")">
-                                <a href="VerwijderBoek2?id=@boekid">
-                                    <img alt="Boek verwijderen" src="Images/delete.png" height="35" width="35" />
-                                </a>
-                                <a href="AanpassenBoek2?id=@boekid">
-                                    <img alt="Boek aanpassen" src="Images/edit.png" height="35" width="35" />
-                                </a>
+                                @if (Roles.IsUserInRole("admin"))
+                                {
+                                    <a href="VerwijderBoek2?id=@boekid">
+                                        <img alt="Boek verwijderen" src="Images/delete.png" height="35" width="35" />
+                                    </a>
+                                    <a href="AanpassenBoek2?id=@boekid">
+                                        <img alt="Boek aanpassen" src="Images/edit.png" height="35" width="35" />
+                                    </a>
+                                }
                                 <a href="Download.cshtml?id=@boekid&name=@HttpUtility.UrlEncode(titel)">
                                     <img alt="Boek downloaden" src="Images/download.png" height="35" width="35">
                                 </a>
@@ -199,12 +202,15 @@
                         <li>
                             <label>Acties</label>
                             <div style="@(formDisabled ? "display:none;" : "")">
-                                 <a href="VerwijderBoek2?id=@boekid">
-                                    <img alt="Boek verwijderen" src="Images/delete.png" height="35" width="35" />
-                                </a>
-                                <a href="AanpassenBoek2?id=@boekid">
-                                    <img alt="Boek aanpassen" src="Images/edit.png" height="35" width="35" />
-                                </a>
+                                @if (Roles.IsUserInRole("admin"))
+                                {
+                                    <a href="VerwijderBoek2?id=@boekid">
+                                        <img alt="Boek verwijderen" src="Images/delete.png" height="35" width="35" />
+                                    </a>
+                                    <a href="AanpassenBoek2?id=@boekid">
+                                        <img alt="Boek aanpassen" src="Images/edit.png" height="35" width="35" />
+                                    </a>
+                                }
                                 <a href="Download.cshtml?id=@boekid&name=@HttpUtility.UrlEncode(titel)">
                                     <img alt="Boek downloaden" src="Images/download.png" height="35" width="35">
                                 </a>
